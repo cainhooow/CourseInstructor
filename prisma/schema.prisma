@@ -1,0 +1,514 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProfileType {
+  NONE
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum FlagsType {
+  CAN_POST_COURSE
+  CAN_EDIT_COURSE
+  CAN_ADD_MODERATORS
+  CAN_CREATE_CHAT
+  CAN_CREATE_PAID_COURSE
+  CAN_JOIN_A_COURSE
+  CAN_SEND_ATTACHMENTS
+  CAN_CREATE_CERTIFICATES
+  CAN_CREATE_ACTIVITIES
+}
+
+model User {
+  id           String   @id @unique @default(uuid())
+  email        String   @unique
+  display_name String
+  Profile      Profile?
+
+  AssignedModerators        CourseModerator[]           @relation(name: "ModeratorAssignee")
+  Course                    Course[]
+  CourseChatMessage         CourseChatMessage[]
+  CourseRating              CourseRating[]
+  GivenTeacherRatings       TeacherRating[]             @relation(name: "RaterUser")
+  ReceivedTeacherRatings    TeacherRating[]             @relation(name: "RatedUser")
+  ConversationMessageReply  ConversationMessageReply[]
+  Flags                     Flag[]                      @relation(name: "UserFlags")
+  LessonConversationMessage LessonConversationMessage[]
+  LessonConversation        LessonConversation[]
+  LoginProvider             LoginProvider[]
+  Transaction               Transaction[]
+  ModeratedCourses          CourseModerator[]           @relation(name: "ModeratorUser")
+  PasswordResetToken        PasswordResetToken[]
+  Password                  Password[]
+  UserLesson                UserLesson[]
+  Partner                   Partner[]
+  CartItem                  CartItem[]
+  Address                   Address[]
+  BillingInfo               BillingInfo[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Profile {
+  id  String @id @unique @default(uuid())
+  bio String
+
+  type ProfileType @default(NONE)
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model BillingInfo {
+  id   String  @unique @default(uuid())
+  cpf  String?
+  cnpj String?
+
+  User      User    @relation(fields: [userId], references: [id])
+  userId    String
+  Address   Address @relation(fields: [addressId], references: [id])
+  addressId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Address {
+  id      String @id @unique @default(uuid())
+  uf      String
+  city    String
+  street  String
+  address String
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  BillingInfo BillingInfo[]
+}
+
+model Password {
+  id       String  @id @unique @default(uuid())
+  password String
+  active   Boolean @default(true)
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model PasswordResetToken {
+  id         String   @id @unique @default(uuid())
+  token      String
+  expires_at DateTime
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum ProviderType {
+  EXTERNAL
+  LOCAL
+}
+
+model LoginProvider {
+  id   String       @id @unique @default(uuid())
+  name ProviderType @default(LOCAL)
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Course {
+  id             String   @id @unique @default(uuid())
+  name           String
+  description    String
+  banner_url     String?
+  demo_video_url String?
+  tags           String[]
+  stock          Int      @default(0)
+  archived       Boolean  @default(false)
+
+  created_by  User       @relation(fields: [createdById], references: [id])
+  createdById String
+  Lesson      Lesson[]
+  categories  Category[] @relation(name: "CourseCategories")
+
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  CourseChat    CourseChat[]
+  CoursePricing CoursePricing[]
+  CourseCoupon  CourseCoupon[]
+  CourseRating  CourseRating[]
+}
+
+model CourseRating {
+  id    String @id @unique @default(uuid())
+  stars Int    @default(0)
+
+  User     User   @relation(fields: [userId], references: [id])
+  userId   String
+  Course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model TeacherRating {
+  id    String @id @unique @default(uuid())
+  stars Int    @default(0)
+
+  Rater     User   @relation(name: "RaterUser", fields: [raterId], references: [id])
+  raterId   String
+  Teacher   User   @relation(name: "RatedUser", fields: [teacherId], references: [id])
+  teacherId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model CoursePricing {
+  id       String @id @unique @default(uuid())
+  Course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  full_price    String
+  upfront_price String
+  currency      String  @default("BRL")
+  active        Boolean @default(true)
+
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  CartItem    CartItem[]
+  Transaction Transaction[]
+}
+
+model CartItem {
+  id              String        @id @unique @default(uuid())
+  User            User          @relation(fields: [userId], references: [id])
+  userId          String
+  Item            CoursePricing @relation(fields: [coursePricingId], references: [id])
+  coursePricingId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELED
+  REJECTED
+}
+
+model Transaction {
+  id     String            @id @unique @default(uuid())
+  status TransactionStatus @default(PENDING)
+
+  PaymentMethod   PlatformPayment @relation(fields: [paymentMethodId], references: [id])
+  paymentMethodId String
+  CoursePricing   CoursePricing   @relation(fields: [coursePricingId], references: [id])
+  coursePricingId String
+  User            User            @relation(fields: [userId], references: [id])
+  userId          String
+
+  DiscountCoupon   DiscountCoupon? @relation(fields: [discountCouponId], references: [id])
+  discountCouponId String?
+  CourseCoupon     CourseCoupon?   @relation(fields: [courseCouponId], references: [id])
+  courseCouponId   String?
+
+  externalTransactionId String?
+  paymentStatus         String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Partner {
+  id String @id @unique @default(uuid())
+
+  User             User           @relation(fields: [userId], references: [id])
+  userId           String
+  DiscountCoupon   DiscountCoupon @relation(fields: [discountCouponId], references: [id])
+  discountCouponId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model CourseCoupon {
+  id               String         @id @unique @default(uuid())
+  Course           Course         @relation(fields: [courseId], references: [id])
+  courseId         String
+  Coupon           DiscountCoupon @relation(fields: [discountCouponId], references: [id])
+  discountCouponId String
+
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  Transaction Transaction[]
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model DiscountCoupon {
+  id       String     @id @unique @default(uuid())
+  code     String     @unique
+  discount String
+  type     CouponType
+
+  max_uses            Int?
+  min_purchase_amount String?
+  max_discount        String?
+  used_count          Int     @default(0)
+  active              Boolean @default(true)
+
+  valid_from DateTime
+  valid_to   DateTime
+
+  Partner      Partner[]
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  CourseCoupon CourseCoupon[]
+  Transaction  Transaction[]
+}
+
+model CourseModerator {
+  id String @id @unique @default(uuid())
+
+  User       User   @relation(name: "ModeratorUser", fields: [userId], references: [id])
+  userId     String
+  Assignee   User   @relation(name: "ModeratorAssignee", fields: [assigneeId], references: [id])
+  assigneeId String
+
+  Flags Flag[] @relation(name: "ModeratorFlags")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model CourseChat {
+  id          String  @id @unique @default(uuid())
+  name        String
+  description String?
+
+  Course   Course @relation(fields: [courseId], references: [id])
+  courseId String
+
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  CourseChatMessage CourseChatMessage[]
+}
+
+model CourseChatMessage {
+  id      String @id @unique @default(uuid())
+  content String
+
+  User         User       @relation(fields: [userId], references: [id])
+  userId       String
+  CourseChat   CourseChat @relation(fields: [courseChatId], references: [id])
+  courseChatId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum VideoPlatform {
+  UPLOAD
+  YOUTUBE
+  VIMEO
+  EXTERNAL_URL
+}
+
+model Lesson {
+  id             String        @id @unique @default(uuid())
+  name           String
+  description    String
+  estimated_time BigInt?
+  video_url      String
+  video_type     VideoPlatform @default(EXTERNAL_URL)
+
+  Course             Course               @relation(fields: [courseId], references: [id])
+  courseId           String
+  LessonActivity     LessonActivity[]
+  LessonConversation LessonConversation[]
+
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+  UserLesson UserLesson[]
+}
+
+model UserLesson {
+  id        String  @id @unique @default(uuid())
+  completed Boolean @default(false)
+
+  started_at DateTime @default(now())
+  ends_at    DateTime
+
+  User     User   @relation(fields: [userId], references: [id])
+  userId   String
+  Lesson   Lesson @relation(fields: [lessonId], references: [id])
+  lessonId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+enum ActivityType {
+  QUESTION
+  WRITTEN_ANSWER
+}
+
+enum ActivityDifficulty {
+  NORMAL
+  EASY
+  MEDIUM
+  HARD
+}
+
+model LessonActivity {
+  id          String @id @unique @default(uuid())
+  name        String
+  description String
+
+  difficulty ActivityDifficulty @default(NORMAL)
+  type       ActivityType       @default(QUESTION)
+  Lesson     Lesson             @relation(fields: [lessonId], references: [id])
+
+  lessonId                 String
+  LessonActivityAttachment LessonActivityAttachment[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model LessonActivityAttachment {
+  id         String @id @unique @default(uuid())
+  attachment String
+
+  LessonActivity   LessonActivity @relation(fields: [lessonActivityId], references: [id])
+  lessonActivityId String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model LessonConversation {
+  id String @id @unique @default(uuid())
+
+  Lesson                    Lesson                      @relation(fields: [lessonId], references: [id])
+  LessonConversationMessage LessonConversationMessage[]
+  lessonId                  String
+  created_by                User                        @relation(fields: [createdById], references: [id])
+  createdById               String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model LessonConversationMessage {
+  id      String @id @unique @default(uuid())
+  content String
+
+  User                     User                       @relation(fields: [userId], references: [id])
+  LessonConversation       LessonConversation         @relation(fields: [lessonConversationId], references: [id])
+  userId                   String
+  lessonConversationId     String
+  ConversationMessageReply ConversationMessageReply[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ConversationMessageReply {
+  id      String @id @unique @default(uuid())
+  content String
+
+  LessonConversationMessage   LessonConversationMessage @relation(fields: [lessonConversationMessageId], references: [id])
+  lessonConversationMessageId String
+  User                        User                      @relation(fields: [userId], references: [id])
+  userId                      String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Category {
+  id          String  @id @unique @default(uuid())
+  name        String
+  description String?
+
+  courses Course[] @relation(name: "CourseCategories")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Flag {
+  id   String    @id @unique @default(uuid())
+  name FlagsType @unique
+
+  Users      User[]            @relation(name: "UserFlags")
+  Moderators CourseModerator[] @relation(name: "ModeratorFlags")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model PaymentProvider {
+  id              String            @id @unique @default(uuid())
+  name            String
+  accessKey       String?
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @updatedAt
+  PlatformPayment PlatformPayment[]
+}
+
+model PlatformPayment {
+  id                String          @id @unique @default(uuid())
+  PaymentProvider   PaymentProvider @relation(fields: [paymentProviderId], references: [id])
+  paymentProviderId String
+  active            Boolean
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @updatedAt
+  Transaction       Transaction[]
+}
+
+model PlatformSetting {
+  id    String @id @unique @default(uuid())
+  name  String
+  value String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
