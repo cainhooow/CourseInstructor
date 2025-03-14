@@ -3,7 +3,7 @@ import { UserPasswordDTO } from "@/app/dto/user/UserPasswordDTO";
 import Repository from "../Repository";
 import { Password, Prisma } from "@prisma/client";
 
-type CreatablePassword = Omit<
+export type CreatablePassword = Omit<
   UserPasswordDTO,
   "id" | "created_at" | "updated_at"
 >;

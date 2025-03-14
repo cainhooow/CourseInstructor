@@ -3,7 +3,7 @@ import { LoginProvider, Prisma } from "@prisma/client";
 import Repository from "../Repository";
 import { LoginProviderDTO } from "@/app/dto/user/LoginProviderDTO";
 
-type CreateableProvider = Omit<
+export type CreateableProvider = Omit<
   LoginProviderDTO,
   "id" | "created_at" | "updated_at"
 >;
