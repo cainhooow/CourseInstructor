@@ -5,19 +5,42 @@ import UserRequest from "@/app/http/requests/UserRequest";
 import UserService from "@/app/services/user/UserService";
 import { UserDTO } from "@/app/dto/user/UserDTO";
 import UserResponse from "@/app/http/responses/user/UserResponse";
+import AuthService from "@/app/services/user/AuthService";
 
 export default class AuthLocalRouter extends BaseRouter {
-  constructor(protected service = new UserService()) {
+  constructor(
+    protected service = new UserService(),
+    protected authService = new AuthService()
+  ) {
     super({ prefix: "/local" });
   }
 
   private local(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate("local", function (err: any, user: any) {
+    const authService = this.authService;
+
+    passport.authenticate("local", async function (err: any, user: any) {
       if (err) {
         return res.status(401).json(err);
       }
 
-      console.log(user);
+      if (!user) {
+        return res
+          .status(401)
+          .json({ message: "Invalid username or password" });
+      }
+
+      try {
+        const { token, refreshToken } = await authService.login(user.id);
+
+        return res.json(
+          new UserResponse(user)
+            .addField("token", token)
+            .addField("refreshToken", refreshToken)
+            .make()
+        );
+      } catch (err) {
+        next(err);
+      }
     })(req, res, next);
   }
 

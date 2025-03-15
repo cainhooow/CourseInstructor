@@ -33,7 +33,6 @@ export default class LocalStrategy extends Strategy {
           return done({ message: "Invalid username or password" }, false);
         }
 
-        console.log(user);
         return done(null, user);
       }
     );

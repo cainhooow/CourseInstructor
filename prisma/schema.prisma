@@ -70,6 +70,18 @@ model User {
   Address                   Address[]
   BillingInfo               BillingInfo[]
 
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  RefreshToken RefreshToken[]
+}
+
+model RefreshToken {
+  id    String @id @unique
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  expires_at DateTime
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
