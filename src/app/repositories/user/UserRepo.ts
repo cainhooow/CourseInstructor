@@ -22,7 +22,7 @@ export default class UserRepository extends Repository<
     await $.$disconnect();
     return data as Prisma.UserGetPayload<{
       include: typeof includes;
-    }>;
+    }> | null;
   }
 
   public async findByEmail(email: string) {
@@ -38,7 +38,7 @@ export default class UserRepository extends Repository<
     await $.$disconnect();
     return data as Prisma.UserGetPayload<{
       include: typeof includes;
-    }>;
+    }> | null;
   }
 
   public async createWithPassword(user: CreatableUser, password: string) {
@@ -58,7 +58,7 @@ export default class UserRepository extends Repository<
 
     return data as Prisma.UserGetPayload<{
       include: typeof includes;
-    }>;
+    }> | null;
   }
 
   public async createWithFlags(
@@ -80,7 +80,7 @@ export default class UserRepository extends Repository<
     await $.$disconnect();
     return data as Prisma.UserGetPayload<{
       include: typeof includes;
-    }>;
+    }> | null;
   }
 
   public async create(user: CreatableUser) {

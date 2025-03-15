@@ -21,6 +21,6 @@ export default class FlagRepository extends Repository<
       include: includes,
     });
 
-    return data as Prisma.FlagGetPayload<{ include: typeof includes }>[];
+    return data as Prisma.FlagGetPayload<{ include: typeof includes }>[] | null;
   }
 }

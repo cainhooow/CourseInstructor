@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 // import JwtAuthStrategy from "./strategy/JwtStrategy";
 import Router from "./versions/route";
+import LocalStrategy from "./strategy/LocalStrategy";
 
 export default class App {
   private app = express();
@@ -38,7 +39,7 @@ export default class App {
   }
 
   private __strategy() {
-    // new JwtAuthStrategy();
+    new LocalStrategy();
   }
 
   private __router() {

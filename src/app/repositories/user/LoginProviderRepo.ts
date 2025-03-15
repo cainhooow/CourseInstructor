@@ -25,7 +25,7 @@ export default class LoginProviderRepository extends Repository<
     await $.$disconnect();
     return data as Prisma.LoginProviderGetPayload<{
       include: typeof includes;
-    }>[];
+    }>[] | null;
   }
 
   public async create(provider: CreateableProvider) {

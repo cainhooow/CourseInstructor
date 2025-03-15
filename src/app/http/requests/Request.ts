@@ -1,7 +1,17 @@
+import ValidationHelper from "@/app/helpers/ValidationHelper";
+import { Validator } from "@courseinstructor/validator";
+
 export interface IRequest {
-  validate(): boolean;
-  hasErrors(): string[]
+  validateAsync(): Promise<boolean>;
+  hasErrors(): string[];
   getData<T>(): T;
+}
+
+export class ValidationError extends Error {
+  constructor(public errors: string[]) {
+    super("Validation failed");
+    this.name = "ValidationError";
+  }
 }
 
 export default class Request implements IRequest {
@@ -9,10 +19,11 @@ export default class Request implements IRequest {
 
   constructor(
     protected data: Record<string, any>,
-    private requiredFields: string[]
+    private requiredFields: string[],
+    protected helper = new ValidationHelper()
   ) {}
 
-  public validate(): boolean {
+  public async validateAsync(): Promise<boolean> {
     this.errors = [];
 
     if (typeof this.data === "undefined") {
@@ -23,24 +34,63 @@ export default class Request implements IRequest {
     for (const field of this.requiredFields) {
       if (!(field in this.data)) {
         console.error(`Validation failed: Missing ${field}`);
-        this.errors.push(`Missing field: ${field}`)
+        this.errors.push(`Missing field: ${field}`);
         return false;
       }
     }
 
-    this.validation();
-    return this.errors.length === 0;
+    await this.applyRulesAsync();
+
+    if (this.errors.length > 0) {
+      throw new ValidationError(this.errors);
+    }
+
+    return true;
   }
 
   protected validation(): boolean {
     return true;
   }
 
+  private async applyRulesAsync() {
+    const rules = this.rules();
+
+    for (const [field, ruleString] of Object.entries(rules)) {
+      const value = this.data[field];
+      const ruleList = ruleString.split("|");
+
+      for (const rule of ruleList) {
+        const validator = new Validator(rule, field, value);
+        const error = validator.validate();
+        
+        if (error) {
+          this.errors.push(error);
+        }
+
+        const uniqueMatch = rule.match(/^unique:([\w_]+)$/);
+        if (uniqueMatch) {
+          const tableName = uniqueMatch[1];
+          const isUnique = await this.helper.unique(tableName, field, value);
+
+          if (!isUnique) {
+            this.errors.push(
+              `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
+            );
+          }
+        }
+      }
+    }
+  }
+
+  protected rules(): Record<string, string> {
+    return {};
+  }
+
   public hasErrors(): string[] {
-      return this.errors;
+    return this.errors;
   }
 
   public getData<T>(): T {
-      return this.data as T;
+    return this.data as T;
   }
 }

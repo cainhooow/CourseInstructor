@@ -26,6 +26,7 @@ export default class UserService {
 
   public async createWithFlags(user: CreatableUser) {
     const flags = await this.service.selectOnly([]);
+    if (!flags) return;
     return await this.repository.createWithFlags(user, flags);
   }
 

@@ -4,10 +4,18 @@ export interface Error {
 
 export interface IResponse {
   make<T>(): T | T[] | Error;
+  addField(key: string, data: any): this;
 }
 
 export class Response implements IResponse {
+  protected include: Record<string, any> = {};
+
   constructor(protected data?: any) {}
+
+  addField(key: string, data: any): this {
+    this.include[key] = data;
+    return this;
+  }
 
   make<T>(): T | T[] | Error {
     if (!this.data) {
@@ -26,6 +34,9 @@ export class Response implements IResponse {
   }
 
   protected makeData<_T>(data: any) {
-    return data;
+    return {
+      ...data,
+      ...this.include,
+    };
   }
 }

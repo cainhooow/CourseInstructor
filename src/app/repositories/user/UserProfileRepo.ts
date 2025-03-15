@@ -23,7 +23,9 @@ export default class UserProfileRepository extends Repository<
     });
 
     await $.$disconnect();
-    return data as Prisma.ProfileGetPayload<{ include: typeof includes }>;
+    return data as Prisma.ProfileGetPayload<{
+      include: typeof includes;
+    }> | null;
   }
 
   public async setType(id: string, type: ProfileType) {
@@ -40,7 +42,9 @@ export default class UserProfileRepository extends Repository<
     });
 
     await $.$disconnect();
-    return data as Prisma.ProfileGetPayload<{ include: typeof includes }>;
+    return data as Prisma.ProfileGetPayload<{
+      include: typeof includes;
+    }> | null;
   }
 
   public async create(profile: CreatableProfile) {

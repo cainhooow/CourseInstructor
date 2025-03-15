@@ -12,6 +12,21 @@ export default class PasswordRepository extends Repository<
   Password,
   Prisma.PasswordInclude
 > {
+  public async onlyActive(userId: string) {
+    const includes = this.getIncludes();
+    const data = await $.password.findFirst({
+      where: {
+        AND: [{ userId }, { active: true }],
+      },
+      include: includes,
+    });
+
+    await $.$disconnect();
+    return data as Prisma.PasswordGetPayload<{
+      include: typeof includes;
+    }> | null;
+  }
+
   public async findById(id: string) {
     const includes = this.getIncludes();
 
@@ -23,7 +38,9 @@ export default class PasswordRepository extends Repository<
     });
 
     await $.$disconnect();
-    return data as Prisma.PasswordGetPayload<{ include: typeof includes }>;
+    return data as Prisma.PasswordGetPayload<{
+      include: typeof includes;
+    }> | null;
   }
 
   public async setActive(active: boolean, id: string) {
@@ -40,7 +57,9 @@ export default class PasswordRepository extends Repository<
     });
 
     await $.$disconnect();
-    return data as Prisma.PasswordGetPayload<{ include: typeof includes }>;
+    return data as Prisma.PasswordGetPayload<{
+      include: typeof includes;
+    }> | null;
   }
 
   public async create(password: CreatablePassword) {
