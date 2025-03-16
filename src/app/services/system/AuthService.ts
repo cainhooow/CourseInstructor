@@ -1,5 +1,5 @@
 import RefreshTokenRepository from "@/app/repositories/user/RefreshTokenRepo";
-import JwtService from "../JwtService";
+import JwtService from "./JwtService";
 
 export default class AuthService {
   private SECRET = process.env.AUTH_SERVICE_SECRET as string;
@@ -16,14 +16,14 @@ export default class AuthService {
       expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     };
 
-    const refreshToken = this.jwtService.sign(
+    const accessToken = this.jwtService.sign(
       {
         id: newRefreshToken.userId,
       },
       "1h"
     );
 
-    const token = this.jwtService.sign(
+    const refreshToken = this.jwtService.sign(
       {
         id: newRefreshToken.id,
       },
@@ -34,8 +34,8 @@ export default class AuthService {
     });
 
     return {
+      accessToken,
       refreshToken,
-      token,
     };
   }
 

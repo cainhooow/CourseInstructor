@@ -1,16 +1,19 @@
 import { Request, Response, NextFunction } from "express";
+import { UserDTO } from "@/app/dto/user/UserDTO";
 import BaseRouter from "@/app/utils/BaseRouter";
 import passport from "passport";
 import UserRequest from "@/app/http/requests/UserRequest";
 import UserService from "@/app/services/user/UserService";
-import { UserDTO } from "@/app/dto/user/UserDTO";
 import UserResponse from "@/app/http/responses/user/UserResponse";
-import AuthService from "@/app/services/user/AuthService";
+import AuthService from "@/app/services/system/AuthService";
+import LoginProviderService from "@/app/services/user/LoginProviderService";
+import { ProviderType } from "@prisma/client";
 
 export default class AuthLocalRouter extends BaseRouter {
   constructor(
     protected service = new UserService(),
-    protected authService = new AuthService()
+    protected authService = new AuthService(),
+    protected providerService = new LoginProviderService()
   ) {
     super({ prefix: "/local" });
   }
@@ -30,11 +33,11 @@ export default class AuthLocalRouter extends BaseRouter {
       }
 
       try {
-        const { token, refreshToken } = await authService.login(user.id);
+        const { accessToken, refreshToken } = await authService.login(user.id);
 
         return res.json(
           new UserResponse(user)
-            .addField("token", token)
+            .addField("token", accessToken)
             .addField("refreshToken", refreshToken)
             .make()
         );
@@ -56,15 +59,28 @@ export default class AuthLocalRouter extends BaseRouter {
       UserDTO & { password: string }
     >();
 
-    const data = await this.service.createWithPassword(
-      {
-        email,
-        display_name,
-      },
-      password
-    );
+    try {
+      const createdUser = await this.service.createWithPassword(
+        {
+          email,
+          display_name,
+        },
+        password
+      );
 
-    res.json(new UserResponse(data as any).make());
+      if (!createdUser) {
+        throw new Error("User not created");
+      }
+
+      await this.providerService.create({
+        name: ProviderType.LOCAL,
+        userId: createdUser.id,
+      });
+
+      res.json(new UserResponse(createdUser as any).make());
+    } catch (err) {
+      throw err;
+    }
   }
 
   public route(): void {

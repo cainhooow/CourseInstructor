@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 // import JwtAuthStrategy from "./strategy/JwtStrategy";
 import Router from "./versions/route";
 import LocalStrategy from "./strategy/LocalStrategy";
+import JwtAuthStrategy from "./strategy/JwtStrategy";
+import Logger from "./utils/Logger";
 
 export default class App {
   private app = express();
@@ -22,7 +24,7 @@ export default class App {
 
   private __listen() {
     this.app.listen(this.port, () => {
-      console.log(`Server running on port ${this.port}`);
+      Logger.welcome(this.port);
     });
   }
 
@@ -39,6 +41,7 @@ export default class App {
   }
 
   private __strategy() {
+    new JwtAuthStrategy();
     new LocalStrategy();
   }
 

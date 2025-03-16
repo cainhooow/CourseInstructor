@@ -15,9 +15,9 @@ export type UserWithPasswordDto = UserDTO & {
 };
 
 export type UserWithProfileDTO = UserDTO & {
-  profile: UserProfileDTO;
+  Profile: UserProfileDTO;
 };
 
 export type UserWithFlagsDTO = UserDTO & {
-  flags: FlagsDTO[];
+  Flags: FlagsDTO[];
 };

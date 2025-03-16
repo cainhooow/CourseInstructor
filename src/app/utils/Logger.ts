@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { green, yellow, cyan, red } from "console-log-colors";
+import { green, yellow, cyan, red, blue } from "console-log-colors";
 
 export default class Logger {
   static request(req: Request) {
@@ -20,5 +20,14 @@ export default class Logger {
       default:
         return console.log(`[${req.method}] ${log}`);
     }
+  }
+
+  static welcome(port: number) {
+    console.log(
+      `# ${green("Server running on port:")} ${blue(port)} \n# ${green(
+        "Host:"
+      )} ${blue(`http://localhost:${port}`)}
+      `
+    );
   }
 }

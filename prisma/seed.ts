@@ -16,7 +16,7 @@ async function main() {
     data: DefaultCategories,
   });
   const flags = await prisma.flag.createMany({
-    data: DefaultFlags,
+    data: DefaultFlags(),
   });
   const settings = await prisma.platformSetting.createMany({
     data: DefaultPlatformSettings,
