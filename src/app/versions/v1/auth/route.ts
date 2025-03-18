@@ -9,7 +9,7 @@ export default class AuthRouter extends BaseRouter {
   }
 
   private async refreshToken(req: Request, res: Response) {
-    const validator = new RefreshTokenRequest(req.body);
+    const validator = new RefreshTokenRequest(req);
     const validated = await validator.validateAsync();
 
     if (!validated) {

@@ -1,6 +1,4 @@
-export interface Error {
-  message: string;
-}
+import ResponseEmpty from "../errors/ResponseEmpty";
 
 export interface IResponse {
   make<T>(): T | T[] | Error;
@@ -19,11 +17,11 @@ export class Response implements IResponse {
 
   make<T>(): T | T[] | Error {
     if (!this.data) {
-      return { message: `This data is undefined` };
+      throw new ResponseEmpty("responses.empty");
     }
 
     if (Array.isArray(this.data) && this.data.length <= 0) {
-      return { message: `This data is empty` };
+      throw new ResponseEmpty("responses.empty");
     }
 
     if (Array.isArray(this.data)) {

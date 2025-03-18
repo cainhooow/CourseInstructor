@@ -1,8 +1,9 @@
 import Request from "./Request";
+import { Request as ExpressRequest } from "express";
 
 export default class UserRequest extends Request {
-    constructor(protected data: any) {
-        super(data, ["email", "password", "display_name"]);
+    constructor(protected req: ExpressRequest) {
+        super(req, ["email", "password", "display_name"]);
     }
 
     protected rules(): Record<string, string> {

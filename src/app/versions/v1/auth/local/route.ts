@@ -1,3 +1,4 @@
+import { ProviderType } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { UserDTO } from "@/app/dto/user/UserDTO";
 import BaseRouter from "@/app/utils/BaseRouter";
@@ -7,7 +8,6 @@ import UserService from "@/app/services/user/UserService";
 import UserResponse from "@/app/http/responses/user/UserResponse";
 import AuthService from "@/app/services/system/AuthService";
 import LoginProviderService from "@/app/services/user/LoginProviderService";
-import { ProviderType } from "@prisma/client";
 
 export default class AuthLocalRouter extends BaseRouter {
   constructor(
@@ -48,7 +48,7 @@ export default class AuthLocalRouter extends BaseRouter {
   }
 
   private async register(req: Request, res: Response) {
-    const validator = new UserRequest(req.body);
+    const validator = new UserRequest(req);
 
     if (!(await validator.validateAsync())) {
       res.status(400).json({ errors: validator.hasErrors() });

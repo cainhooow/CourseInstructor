@@ -2,7 +2,7 @@ import { Request } from "express";
 import { green, yellow, cyan, red, blue } from "console-log-colors";
 
 export default class Logger {
-  static request(req: Request) {
+  static printRequest(req: Request) {
     const { path, ip } = req;
     const log = `${yellow(ip)} - ${green(path)} ${cyan(
       new Date().toLocaleString()

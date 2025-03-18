@@ -1,5 +1,5 @@
 export default class Repository<
-  T,
+  _T,
   IncludeType extends Record<string, any> = {}
 > {
   protected fields: (keyof IncludeType)[] = [];

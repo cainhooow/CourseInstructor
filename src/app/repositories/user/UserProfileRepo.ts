@@ -28,6 +28,22 @@ export default class UserProfileRepository extends Repository<
     }> | null;
   }
 
+  public async findByUserId(id: string) {
+    const includes = this.getIncludes();
+
+    const data = await $.profile.findFirst({
+      where: {
+        userId: id,
+      },
+      include: includes,
+    });
+
+    await $.$disconnect();
+    return data as Prisma.ProfileGetPayload<{
+      include: typeof includes;
+    }> | null;
+  }
+
   public async setType(id: string, type: ProfileType) {
     const includes = this.getIncludes();
 

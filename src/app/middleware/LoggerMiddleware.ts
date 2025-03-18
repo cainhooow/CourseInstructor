@@ -8,7 +8,7 @@ export default class LoggerMiddleware extends Middleware {
   }
 
   handle(req: Request, _res: Response, next: NextFunction): void {
-    Logger.request(req);
+    Logger.printRequest(req);
     next();
   }
 }

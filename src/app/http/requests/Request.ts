@@ -1,5 +1,7 @@
 import ValidationHelper from "@/app/helpers/ValidationHelper";
 import { Validator } from "@courseinstructor/validator";
+import { ValidationError } from "../errors/ValidationError";
+import { Request as ExpressRequest } from "express";
 
 export interface IRequest {
   validateAsync(): Promise<boolean>;
@@ -7,35 +9,34 @@ export interface IRequest {
   getData<T>(): T;
 }
 
-export class ValidationError extends Error {
-  constructor(public errors: string[]) {
-    super("Validation failed");
-    this.name = "ValidationError";
-  }
-}
-
 export default class Request implements IRequest {
   protected errors: string[] = [];
+  protected data: Record<string, any>;
 
   constructor(
-    protected data: Record<string, any>,
+    protected req: ExpressRequest,
     private requiredFields: string[],
     protected helper = new ValidationHelper()
-  ) {}
+  ) {
+    this.data = req.body || {};
+  }
 
   public async validateAsync(): Promise<boolean> {
     this.errors = [];
 
     if (typeof this.data === "undefined") {
-      this.errors.push("Validation failed: Missing required data");
-      return false;
+      this.errors.push(this.req.t("validation.failed"));
+      throw new ValidationError(this.errors);
     }
 
     for (const field of this.requiredFields) {
       if (!(field in this.data)) {
-        console.error(`Validation failed: Missing ${field}`);
-        this.errors.push(`Missing field: ${field}`);
-        return false;
+        this.errors.push(
+          this.req.t("validation.missing", {
+            field: field,
+          })
+        );
+        throw new ValidationError(this.errors);
       }
     }
 
@@ -60,9 +61,9 @@ export default class Request implements IRequest {
       const ruleList = ruleString.split("|");
 
       for (const rule of ruleList) {
-        const validator = new Validator(rule, field, value);
+        const validator = new Validator(rule, field, value, this.req.t);
         const error = validator.validate();
-        
+
         if (error) {
           this.errors.push(error);
         }
