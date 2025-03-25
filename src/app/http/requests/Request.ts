@@ -62,10 +62,16 @@ export default class Request implements IRequest {
 
       for (const rule of ruleList) {
         const validator = new Validator(rule, field, value, this.req.t);
-        const error = validator.validate();
+        const validationResult = validator.validate();
+        const fnTransform = /(?<=transform)\./;
 
-        if (error) {
-          this.errors.push(error);
+        if (validationResult && fnTransform.test(validationResult)) {
+          const transformedValue = validationResult.split(fnTransform)[1];
+          this.data[field] = transformedValue;
+        }
+
+        if (validationResult && !fnTransform.test(validationResult)) {
+          this.errors.push(validationResult);
         }
 
         const uniqueMatch = rule.match(/^unique:([\w_]+)$/);
@@ -74,9 +80,7 @@ export default class Request implements IRequest {
           const isUnique = await this.helper.unique(tableName, field, value);
 
           if (!isUnique) {
-            this.errors.push(
-              `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
-            );
+            this.errors.push(`${tableName} already exists`);
           }
         }
       }
@@ -89,6 +93,11 @@ export default class Request implements IRequest {
 
   public hasErrors(): string[] {
     return this.errors;
+  }
+
+  public appendField<T>(key: string, value: T): this {
+    this.data[key] = value;
+    return this;
   }
 
   public getData<T>(): T {

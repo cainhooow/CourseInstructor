@@ -3,7 +3,7 @@ import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
 import { Prisma, Profile, ProfileType } from "@prisma/client";
 import Repository from "../Repository";
 
-type CreatableProfile = Omit<
+export type CreatableProfile = Omit<
   UserProfileDTO,
   "id" | "created_at" | "updated_at"
 >;
