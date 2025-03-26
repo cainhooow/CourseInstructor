@@ -8,7 +8,7 @@ export default class UserProfileRequest extends Request {
 
   protected rules(): Record<string, string> {
     return {
-      bio: "string|min:2|max:1500",
+      bio: "string|min:5|max:1500",
       type: "string|min:4|max:7|transform:upper",
     };
   }

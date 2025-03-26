@@ -10,7 +10,6 @@ export default class ErrorMiddleware extends Middleware {
     res: Response,
     next: NextFunction
   ): void {
-    console.log(err)
     if (err instanceof ValidationError) {
       res.status(400).json({
         message: req.t(err.message),
