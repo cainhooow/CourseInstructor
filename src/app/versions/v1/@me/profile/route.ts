@@ -38,7 +38,7 @@ export default class ProfileRouter extends BaseRouter {
   }
 
   private async update(req: Request, res: Response) {
-    const validator = new UserProfileRequest(req).ignoreField("type");
+    const validator = new UserProfileRequest(req).removeField("type");
     await validator.validateAsync();
 
     const user = req.user as UserDTO & { Profile: UserProfileDTO };
