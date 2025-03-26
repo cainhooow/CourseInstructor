@@ -37,8 +37,16 @@ export default class ProfileRouter extends BaseRouter {
     res.json(new UserProfileResponse(data).make());
   }
 
+  private async update(req: Request, res: Response) {
+    const validator = new UserProfileRequest(req).ignoreField("type");
+    await validator.validateAsync();
+
+    res.json({});
+  }
+
   public route(): void {
     this.router.get("/", this.index.bind(this));
     this.router.post("/", this.create.bind(this));
+    this.router.post("/update", this.update.bind(this));
   }
 }

@@ -15,7 +15,11 @@
 
 💠 PgSql `Usado no container docker em dev mode`
 
-Alguns requisitos são opcionais dependendo da preferencia: NodeJS ou Bun
+Alguns requisitos são opcionais dependendo da preferencia: NodeJS ou Bun.
+
+Caso não queira ou não possua o Docker, use o [SupaBase](https://supabase.com) para o banco de dados.
+
+Ou utilize um [servidor postgres](https://www.postgresql.org/download/) local.
 
 ## Configuração
 
