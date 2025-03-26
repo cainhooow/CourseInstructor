@@ -21,6 +21,17 @@ Caso não queira ou não possua o Docker, use o [SupaBase](https://supabase.com)
 
 Ou utilize um [servidor postgres](https://www.postgresql.org/download/) local.
 
+## Dependencias
+[i18next](https://www.i18next.com)
+
+[expressjs](https://expressjs.com)
+
+[jsonwebtoken](https://jwt.io)
+
+[passport](https://passportjs.org)
+
+[@courseinstructor-utils](https://github.com/cainhooow/courseinstructor-utils)
+
 ## Configuração
 
 Para Bun:
