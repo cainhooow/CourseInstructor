@@ -104,7 +104,9 @@ export default class Request implements IRequest {
       const ruleList = ruleString.split("|");
 
       for (const rule of ruleList) {
-        if (this.fieldIsIgnored(field)) return;
+        if (this.fieldIsIgnored(field)) {
+          return delete this.data[field];
+        }
 
         const validator = new Validator(rule, field, value, this.req.t);
         const validationResult = validator.validate();
@@ -115,10 +117,7 @@ export default class Request implements IRequest {
           this.data[field] = transformedValue;
         }
 
-        if (
-          validationResult &&
-          !fnTransform.test(validationResult)
-        ) {
+        if (validationResult && !fnTransform.test(validationResult)) {
           this.errors.push(validationResult);
         }
 
@@ -167,11 +166,11 @@ export default class Request implements IRequest {
   public ignoreFields(fields: string[]) {
     fields.map((field) => {
       if (this.ignoredFields.includes(field)) {
-        throw new Error(`${field} already exists in ignore list`)
+        throw new Error(`${field} already exists in ignore list`);
       }
 
-      this.ignoredFields.push(field)
-    })
+      this.ignoredFields.push(field);
+    });
 
     return this;
   }
@@ -182,7 +181,6 @@ export default class Request implements IRequest {
     }
 
     this.ignoredFields.push(field);
-
     return this;
   }
   /**

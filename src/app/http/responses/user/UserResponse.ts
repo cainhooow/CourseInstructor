@@ -13,7 +13,10 @@ export default class UserResponse extends Response {
 
   private incremental(data: UserDTO | UserWithFlagsDTO | UserWithProfileDTO) {
     if ("Profile" in data && data.Profile !== null) {
-      this.addField("profile", data.Profile);
+      this.addField("profile", {
+        bio: data.Profile.bio,
+        type: data.Profile.type,
+      });
     }
 
     if ("Flags" in data && (data as UserWithFlagsDTO).Flags.length > 0) {

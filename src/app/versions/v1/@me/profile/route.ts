@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
+import { UserDTO } from "@/app/dto/user/UserDTO";
 import BaseRouter from "@/app/utils/BaseRouter";
 import ProfileService from "@/app/services/user/ProfileService";
-import { UserDTO } from "@/app/dto/user/UserDTO";
-import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
 import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
+import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
 import UserProfileRequest from "@/app/http/requests/UserProfileRequest";
 
 export default class ProfileRouter extends BaseRouter {
@@ -41,7 +41,15 @@ export default class ProfileRouter extends BaseRouter {
     const validator = new UserProfileRequest(req).ignoreField("type");
     await validator.validateAsync();
 
-    res.json({});
+    const user = req.user as UserDTO & { Profile: UserProfileDTO };
+
+    const data = await this.service.update(
+      user.Profile.id,
+      user.id,
+      validator.getData()
+    );
+
+    res.json(new UserProfileResponse(data as UserProfileDTO).make());
   }
 
   public route(): void {

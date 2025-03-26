@@ -44,6 +44,25 @@ export default class UserProfileRepository extends Repository<
     }> | null;
   }
 
+  public async setBio(id: string, bio: string) {
+    const includes = this.getIncludes();
+
+    const data = await $.profile.update({
+      where: {
+        id,
+      },
+      data: {
+        bio,
+      },
+      include: includes,
+    });
+
+    await $.$disconnect();
+    return data as Prisma.ProfileGetPayload<{
+      include: typeof includes;
+    }>;
+  }
+
   public async setType(id: string, type: ProfileType) {
     const includes = this.getIncludes();
 
@@ -54,6 +73,30 @@ export default class UserProfileRepository extends Repository<
       data: {
         type,
       },
+      include: includes,
+    });
+
+    await $.$disconnect();
+    return data as Prisma.ProfileGetPayload<{
+      include: typeof includes;
+    }> | null;
+  }
+
+  public async update(
+    profileId: string,
+    userId: string,
+    user: CreatableProfile
+  ) {
+    const includes = this.getIncludes();
+
+    const data = await $.profile.update({
+      where: {
+        id: profileId,
+        User: {
+          id: userId,
+        },
+      },
+      data: { ...user },
       include: includes,
     });
 
