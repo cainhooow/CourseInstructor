@@ -29,6 +29,7 @@ export default class AuthService {
       },
       "7d"
     );
+    
     await this.repository.create({
       ...newRefreshToken,
     });

@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { UserDTO } from "@/app/dto/user/UserDTO";
 import BaseRouter from "@/app/utils/BaseRouter";
 import passport from "passport";
-import UserRequest from "@/app/http/requests/UserRequest";
+import UserRequest from "@/app/http/requests/user/UserRequest";
 import UserService from "@/app/services/user/UserService";
 import UserResponse from "@/app/http/responses/user/UserResponse";
 import AuthService from "@/app/services/system/AuthService";

@@ -5,6 +5,7 @@ import UserResponse from "@/app/http/responses/user/UserResponse";
 import AuthMiddleware from "@/app/middleware/AuthMiddleware";
 import BaseRouter from "@/app/utils/BaseRouter";
 import ProfileRouter from "./profile/route";
+import BillingRouter from "./billing/route";
 
 export default class MeRouter extends BaseRouter {
   constructor() {
@@ -20,6 +21,8 @@ export default class MeRouter extends BaseRouter {
 
   public route(): void {
     this.router.use(new ProfileRouter().getRouter());
+    this.router.use(new BillingRouter().getRouter());
+    
     this.router.get("/", this.index.bind(this));
   }
 }

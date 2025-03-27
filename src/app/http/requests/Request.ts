@@ -2,6 +2,7 @@ import ValidationHelper from "@/app/helpers/ValidationHelper";
 import { Validator } from "@courseinstructor/validator";
 import { ValidationError } from "../errors/ValidationError";
 import { Request as ExpressRequest } from "express";
+import Logger from "@/app/utils/Logger";
 
 
 export interface IRequest {
@@ -118,9 +119,10 @@ export default class Request implements IRequest {
   }
 
   public optionals(fields: string[]) {
+    Logger.log("DEBUG", `Field ${fields} marked with optional in request`);
     fields.map((field) => {
       if (this.optionalFields.includes(field)) {
-        throw new Error(`${field} field already mark to optional in request`);
+        throw new Error(`Field ${field} field already mark to optional in request`);
       }
 
       this.optionalFields.push(field);
@@ -128,8 +130,10 @@ export default class Request implements IRequest {
   }
 
   public optional(field: string) {
+    Logger.log("DEBUG", `Field ${field} marked with optional in request.body`);
+
     if (this.fieldIsOptional(field)) {
-      throw new Error(`${field} field already mark to optional in request`);
+      throw new Error(`Field ${field} field already mark to optional in request.body`);
     }
 
     this.optionalFields.includes(field);
@@ -137,9 +141,11 @@ export default class Request implements IRequest {
   }
 
   public removeFields(fields: string[]) {
+    Logger.log("DEBUG", `Field ${fields} deleted from request.body`);
+
     fields.map((field) => {
       if (this.removedFields.includes(field)) {
-        throw new Error(`${field} already exists in ignore list`);
+        throw new Error(`Field ${field} already exists in ignore list`);
       }
 
       this.removedFields.push(field);
@@ -149,8 +155,10 @@ export default class Request implements IRequest {
   }
 
   public removeField(field: string) {
+    Logger.log("DEBUG", `Field ${field} deleted from request.body`);
+
     if (this.fieldIsRemoved(field)) {
-      throw new Error(`${field} already in ignore list`);
+      throw new Error(`Field ${field} already in ignore list`);
     }
 
     this.removedFields.push(field);
@@ -158,6 +166,7 @@ export default class Request implements IRequest {
   }
 
   public appendField<T>(key: string, value: T): this {
+    Logger.log("DEBUG", `Field ${key} added to return data`);
     this.data[key] = value;
     return this;
   }

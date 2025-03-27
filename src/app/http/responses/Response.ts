@@ -1,3 +1,4 @@
+import Logger from "@/app/utils/Logger";
 import ResponseEmpty from "../errors/ResponseEmpty";
 
 export interface IResponse {
@@ -11,6 +12,7 @@ export class Response implements IResponse {
   constructor(protected data?: any) {}
 
   addField(key: string, data: any): this {
+    Logger.log("DEBUG", `additional field: ${key} to response data`);
     this.include[key] = data;
     return this;
   }
@@ -19,15 +21,15 @@ export class Response implements IResponse {
     if (!this.data) {
       throw new ResponseEmpty("responses.empty");
     }
-
+    
     if (Array.isArray(this.data) && this.data.length <= 0) {
       throw new ResponseEmpty("responses.empty");
     }
-
+    
     if (Array.isArray(this.data)) {
       return this.data.map((item: T) => this.makeData(item)) as T[];
     }
-
+    
     return this.makeData(this.data) as T;
   }
 

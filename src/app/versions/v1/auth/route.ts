@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import BaseRouter from "@/app/utils/BaseRouter";
 import AuthLocalRouter from "./local/route";
 import AuthService from "@/app/services/system/AuthService";
-import RefreshTokenRequest from "@/app/http/requests/RefreshTokenRequest";
+import RefreshTokenRequest from "@/app/http/requests/auth/RefreshTokenRequest";
 export default class AuthRouter extends BaseRouter {
   constructor(protected authService = new AuthService()) {
     super({ prefix: "/auth" });

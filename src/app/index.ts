@@ -29,8 +29,9 @@ export default class App {
   }
 
   private _configure() {
+    Logger.log("DEBUG", "Configuring app defaults");
     dotenv.config();
-    
+
     this.app.use(handle(i18next));
     this.app.use(cors());
     this.app.use(express.json());
@@ -42,11 +43,13 @@ export default class App {
   }
 
   private _strategy() {
+    Logger.log("DEBUG", "Setup app strategies");
     new JwtAuthStrategy();
     new LocalStrategy();
   }
 
   private _router() {
+    Logger.log("DEBUG", "Setup router");
     this.app.use(new Router().getRouter());
   }
 }

@@ -1,12 +1,15 @@
 import { Request } from "express";
-import { green, yellow, cyan, red, blue } from "console-log-colors";
+import { green, yellow, cyan, red, blue, magenta } from "console-log-colors";
+
+type LogLevel = "DEBUG" | "ERROR" | "CRITICAL" | "DATABASE";
 
 export default class Logger {
   static printRequest(req: Request) {
     const { path, ip } = req;
-    const log = `${cyan(new Date().toLocaleString())} - ${green(path)} - ${yellow(
-      ip
-    )}`;
+    
+    const log = `${cyan(new Date().toLocaleString())} - ${green(
+      path
+    )} - ${yellow(ip)}`;
 
     switch (req.method) {
       case "GET":
@@ -29,5 +32,46 @@ export default class Logger {
       )} ${blue(`http://localhost:${port}`)}
       `
     );
+  }
+
+  static database(...args: any[]) {
+    console.debug(
+      `[${green("DATABASE")}] ${cyan(new Date().toLocaleString())} - ${blue(
+        args
+      )}`
+    );
+  }
+
+  static debug(...args: any[]) {
+    console.debug(
+      `[${magenta("DEBUG")}] ${cyan(new Date().toLocaleString())} - ${blue(
+        args
+      )}`
+    );
+  }
+
+  static critical(...args: any[]) {
+    console.error(
+      `[${red("CRITICAL")}] ${red(new Date().toLocaleString())} - ${red(args)}`
+    );
+  }
+
+  static error(...args: any[]) {
+    console.error(
+      `[${red("ERROR")}] ${cyan(new Date().toLocaleString())} - ${blue(args)}`
+    );
+  }
+
+  static log(level: LogLevel, ...args: any[]) {
+    const levelKey = level.toLowerCase();
+
+    const levels: Record<string, any> = {
+      critical: this.critical,
+      error: this.error,
+      debug: this.debug,
+      database: this.database,
+    };
+
+    return levels[levelKey] ? levels[levelKey](...args) : this.debug(...args);
   }
 }

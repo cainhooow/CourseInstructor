@@ -1,4 +1,4 @@
-import Request from "./Request";
+import Request from "../Request";
 import { Request as ExpressRequest } from "express";
 
 export default class UserProfileRequest extends Request {

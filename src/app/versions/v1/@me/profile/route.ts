@@ -4,7 +4,7 @@ import BaseRouter from "@/app/utils/BaseRouter";
 import ProfileService from "@/app/services/user/ProfileService";
 import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
 import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
-import UserProfileRequest from "@/app/http/requests/UserProfileRequest";
+import UserProfileRequest from "@/app/http/requests/user/UserProfileRequest";
 
 export default class ProfileRouter extends BaseRouter {
   constructor(protected service = new ProfileService()) {
