@@ -4,8 +4,8 @@ import { green, yellow, cyan, red, blue } from "console-log-colors";
 export default class Logger {
   static printRequest(req: Request) {
     const { path, ip } = req;
-    const log = `${yellow(ip)} - ${green(path)} ${cyan(
-      new Date().toLocaleString()
+    const log = `${cyan(new Date().toLocaleString())} - ${green(path)} - ${yellow(
+      ip
     )}`;
 
     switch (req.method) {

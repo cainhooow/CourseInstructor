@@ -1,9 +1,15 @@
+import { UserAddressDTO } from "./UserAddressDTO";
+
 export type UserBillingDTO = {
   id: string;
-  cpf?: string;
-  cpnpj?: string;
+  name: string;
+  document: string;
   userId: string;
-
   created_at: Date;
   updated_at: Date;
+};
+
+export type BillingDTOWithAddress = UserBillingDTO & {
+  addressId: number;
+  address: UserAddressDTO;
 };
