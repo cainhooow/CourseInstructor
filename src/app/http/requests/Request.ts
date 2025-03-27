@@ -4,7 +4,6 @@ import { ValidationError } from "../errors/ValidationError";
 import { Request as ExpressRequest } from "express";
 import Logger from "@/app/utils/Logger";
 
-
 export interface IRequest {
   validateAsync(): Promise<boolean>;
   hasErrors(): string[];
@@ -122,7 +121,9 @@ export default class Request implements IRequest {
     Logger.log("DEBUG", `Field ${fields} marked with optional in request`);
     fields.map((field) => {
       if (this.optionalFields.includes(field)) {
-        throw new Error(`Field ${field} field already mark to optional in request`);
+        throw new Error(
+          `Field ${field} field already mark to optional in request`
+        );
       }
 
       this.optionalFields.push(field);
@@ -133,7 +134,9 @@ export default class Request implements IRequest {
     Logger.log("DEBUG", `Field ${field} marked with optional in request.body`);
 
     if (this.fieldIsOptional(field)) {
-      throw new Error(`Field ${field} field already mark to optional in request.body`);
+      throw new Error(
+        `Field ${field} field already mark to optional in request.body`
+      );
     }
 
     this.optionalFields.includes(field);

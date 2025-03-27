@@ -1,6 +1,7 @@
 export type UserAddressDTO = {
   id: string;
-  uf: string;
+  country: string;
+  state: string;
   city: string;
   street: string;
   address: string;

@@ -114,7 +114,8 @@ model BillingInfo {
 
 model Address {
   id      String @id @unique @default(uuid())
-  uf      String
+  country String
+  state      String
   city    String
   street  String
   address String
