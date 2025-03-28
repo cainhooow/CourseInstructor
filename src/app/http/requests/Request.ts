@@ -4,13 +4,15 @@ import { ValidationError } from "../errors/ValidationError";
 import { Request as ExpressRequest } from "express";
 import Logger from "@/app/utils/Logger";
 
-export interface IRequest {
+export interface IRequest<T> {
   validateAsync(): Promise<boolean>;
   hasErrors(): string[];
-  getData<T>(): T;
+  getData<K extends T>(): K;
 }
 
-export default class Request implements IRequest {
+export default abstract class Request<T extends Record<string, string> = {}>
+  implements IRequest<T>
+{
   protected errors: string[] = [];
   protected data: Record<string, any>;
 
@@ -66,6 +68,8 @@ export default class Request implements IRequest {
 
     for (const [field, ruleString] of Object.entries(rules)) {
       const value = this.data[field];
+      if (!value || typeof value === "undefined") return;
+
       const ruleList = ruleString.split("|");
 
       for (const rule of ruleList) {
@@ -139,7 +143,7 @@ export default class Request implements IRequest {
       );
     }
 
-    this.optionalFields.includes(field);
+    this.optionalFields.push(field);
     return this;
   }
 
@@ -157,14 +161,14 @@ export default class Request implements IRequest {
     return this;
   }
 
-  public removeField(field: string) {
-    Logger.log("DEBUG", `Field ${field} deleted from request.body`);
+  public removeField<K extends keyof T | {}>(field: K) {
+    Logger.log("DEBUG", `Field ${field.toString()} deleted from request.body`);
 
-    if (this.fieldIsRemoved(field)) {
-      throw new Error(`Field ${field} already in ignore list`);
+    if (this.fieldIsRemoved(field as string)) {
+      throw new Error(`Field ${field.toString()} already in ignore list`);
     }
 
-    this.removedFields.push(field);
+    this.removedFields.push(field as string);
     return this;
   }
 
@@ -174,20 +178,17 @@ export default class Request implements IRequest {
     return this;
   }
 
-  public renameField<T extends keyof ReturnType<typeof this.rules>>(
-    from: T,
-    to: string
-  ): this {
-    Logger.log("DEBUG", `Renaming field ${from} to ${to}`);
+  public renameField<K extends keyof T>(from: K, to: string): this {
+    Logger.log("DEBUG", `Renaming field ${from.toString()} to ${to}`);
     if (this.data.hasOwnProperty(from)) {
-      this.data[to] = this.data[from];
-      delete this.data[from];
+      this.data[to] = this.data[from as string];
+      delete this.data[from as string];
     }
 
     return this;
   }
 
-  public getData<T>(): T {
-    return this.data as T;
+  public getData<K extends T>(): K {
+    return this.data as K;
   }
 }

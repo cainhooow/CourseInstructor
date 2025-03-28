@@ -1,7 +1,12 @@
 import Request from "../Request";
 import { Request as ExpressRequest } from "express";
 
-export default class UserProfileRequest extends Request {
+type TUserProfileRequest = {
+  bio: string;
+  type: string;
+};
+
+export default class UserProfileRequest extends Request<TUserProfileRequest> {
   constructor(protected req: ExpressRequest) {
     super(req, ["bio", "type"]);
   }

@@ -1,7 +1,15 @@
 import Request from "../Request";
 import { Request as ExpressRequest } from "express";
 
-export default class UserAddressRequest extends Request {
+type TUserAddressRequest = {
+  country: string;
+  state: string;
+  city: string;
+  street: string;
+  address: string;
+};
+
+export default class UserAddressRequest extends Request<TUserAddressRequest> {
   constructor(protected req: ExpressRequest) {
     super(req, ["country", "state", "city", "street", "address"]);
   }

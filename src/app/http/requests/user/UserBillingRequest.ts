@@ -1,7 +1,12 @@
 import Request from "../Request";
 import { Request as ExpressRequest } from "express";
 
-export default class UserBillingRequest extends Request {
+type TUserBillingRequest = {
+  name: string;
+  document: string;
+  address: string;
+};
+export default class UserBillingRequest extends Request<TUserBillingRequest> {
   constructor(protected req: ExpressRequest) {
     super(req, ["name", "document", "address"]);
   }

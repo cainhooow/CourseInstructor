@@ -1,6 +1,5 @@
 import { ProviderType } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
-import { UserDTO } from "@/app/dto/user/UserDTO";
 import BaseRouter from "@/app/utils/BaseRouter";
 import passport from "passport";
 import UserRequest from "@/app/http/requests/user/UserRequest";
@@ -33,7 +32,7 @@ export default class AuthLocalRouter extends BaseRouter {
       }
 
       try {
-        console.log(user)
+        console.log(user);
         const { accessToken, refreshToken } = await authService.login(user.id);
 
         return res.json(
@@ -56,9 +55,7 @@ export default class AuthLocalRouter extends BaseRouter {
       return;
     }
 
-    const { email, display_name, password } = validator.getData<
-      UserDTO & { password: string }
-    >();
+    const { email, display_name, password } = validator.getData();
 
     try {
       const createdUser = await this.service.createWithPassword(
