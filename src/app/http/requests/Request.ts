@@ -174,6 +174,19 @@ export default class Request implements IRequest {
     return this;
   }
 
+  public renameField<T extends keyof ReturnType<typeof this.rules>>(
+    from: T,
+    to: string
+  ): this {
+    Logger.log("DEBUG", `Renaming field ${from} to ${to}`);
+    if (this.data.hasOwnProperty(from)) {
+      this.data[to] = this.data[from];
+      delete this.data[from];
+    }
+
+    return this;
+  }
+
   public getData<T>(): T {
     return this.data as T;
   }

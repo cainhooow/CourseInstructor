@@ -1,0 +1,41 @@
+import { Address, Prisma } from "@prisma/client";
+import Repository from "../Repository";
+import { $ } from "@/app/database";
+
+export type CreatableAddress = Prisma.AddressCreateInput;
+
+export default class AddressRepo extends Repository<
+  Address,
+  Prisma.AddressInclude
+> {
+  public async findByUserId(userId: string) {
+    const includes = this.getIncludes();
+
+    const data = await $.address.findFirst({
+      where: {
+        User: {
+          id: userId,
+        },
+      },
+      include: includes,
+    });
+
+    await $.$disconnect();
+
+    return data as Prisma.AddressGetPayload<{
+      include: typeof includes;
+    }> | null;
+  }
+
+  public async create(address: CreatableAddress) {
+    const data = await $.address.create({
+      data: {
+        ...address,
+      },
+    });
+
+    await $.$disconnect();
+
+    return data;
+  }
+}

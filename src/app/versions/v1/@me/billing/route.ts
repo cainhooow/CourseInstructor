@@ -15,8 +15,13 @@ export default class BillingRouter extends BaseRouter {
     await validator.validateAsync();
 
     const user = req.user as UserDTO;
-    const data = await this.service.create(validator.getData(), user.id);
-    
+    const data = await this.service.create(
+      validator
+        .renameField("address", "addressId")
+        .appendField("userId", user.id)
+        .getData()
+    );
+
     res.json(new UserBillingResponse(data).make());
   }
 

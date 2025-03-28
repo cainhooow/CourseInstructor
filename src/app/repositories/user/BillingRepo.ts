@@ -1,8 +1,12 @@
 import { $ } from "@/app/database";
 import { BillingInfo, Prisma } from "@prisma/client";
 import Repository from "../Repository";
+import { UserBillingDTO } from "@/app/dto/user/UserBilliingDTO";
 
-export type CreatableProfileBilling = Prisma.BillingInfoCreateInput;
+export type CreatableProfileBilling = Omit<
+  UserBillingDTO,
+  "id" | "created_at" | "updated_at"
+>;
 
 export default class BillingRepo extends Repository<
   BillingInfo,

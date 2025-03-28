@@ -5,6 +5,7 @@ export type UserBillingDTO = {
   name: string;
   document: string;
   userId: string;
+  addressId: string;
   created_at: Date;
   updated_at: Date;
 };
