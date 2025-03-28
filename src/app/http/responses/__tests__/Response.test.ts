@@ -1,13 +1,13 @@
 import { describe, test, expect, beforeEach } from "bun:test";
 import { Response } from "../Response";
-import ResponseEmpty from "../../errors/ResponseEmpty";
+import ResponseNotFound from "../../errors/ResponseNotFound";
 
 describe("Response", () => {
   let userResponse: Response;
   const sampleUser = { id: 1, nome: "João Silva", email: "joao@exemplo.com" };
   const userList = [
     { id: 1, nome: "João Silva", email: "joao@exemplo.com" },
-    { id: 2, nome: "Maria Santos", email: "maria@exemplo.com" }
+    { id: 2, nome: "Maria Santos", email: "maria@exemplo.com" },
   ];
 
   describe("Construtor", () => {
@@ -37,7 +37,7 @@ describe("Response", () => {
       const result = userResponse
         .addField("token", "abc123")
         .addField("expiresIn", 3600);
-      
+
       expect(result).toBe(userResponse);
       const data = userResponse.make<any>();
       expect(data.token).toBe("abc123");
@@ -45,10 +45,8 @@ describe("Response", () => {
     });
 
     test("deve sobrescrever campo com o mesmo nome", () => {
-      userResponse
-        .addField("role", "user")
-        .addField("role", "admin");
-      
+      userResponse.addField("role", "user").addField("role", "admin");
+
       const result = userResponse.make<any>();
       expect(result.role).toBe("admin");
     });
@@ -57,39 +55,39 @@ describe("Response", () => {
   describe("make", () => {
     test("deve lançar ResponseEmpty quando dados são undefined", () => {
       const response = new Response();
-      expect(() => response.make()).toThrow(ResponseEmpty);
+      expect(() => response.make()).toThrow(ResponseNotFound);
       expect(() => response.make()).toThrow("responses.empty");
     });
 
     test("deve lançar ResponseEmpty quando dados são um array vazio", () => {
       const response = new Response([]);
-      expect(() => response.make()).toThrow(ResponseEmpty);
+      expect(() => response.make()).toThrow(ResponseNotFound);
       expect(() => response.make()).toThrow("responses.empty");
     });
 
     test("deve processar corretamente dados de objeto único", () => {
       const response = new Response(sampleUser);
       response.addField("timestamp", 1616161616);
-      
+
       const result = response.make<typeof sampleUser & { timestamp: number }>();
       expect(result).toEqual({
         ...sampleUser,
-        timestamp: 1616161616
+        timestamp: 1616161616,
       });
     });
 
     test("deve processar corretamente array de dados", () => {
       const response = new Response(userList);
       response.addField("processedAt", "2023-01-01");
-      
+
       const results = response.make<any>();
       expect(Array.isArray(results)).toBe(true);
       expect(results.length).toBe(2);
-      
+
       results.forEach((item: any, index: number) => {
         expect(item).toEqual({
           ...userList[index],
-          processedAt: "2023-01-01"
+          processedAt: "2023-01-01",
         });
       });
     });
@@ -98,26 +96,29 @@ describe("Response", () => {
   describe("makeData", () => {
     test("deve combinar dados com campos incluídos", () => {
       const response = new Response();
-      (response as any).include = { extraField: "valor extra", status: "ativo" };
-      
+      (response as any).include = {
+        extraField: "valor extra",
+        status: "ativo",
+      };
+
       // Acessando método protegido para teste
       const result = (response as any).makeData({ id: 1, name: "Teste" });
-      
+
       expect(result).toEqual({
         id: 1,
         name: "Teste",
         extraField: "valor extra",
-        status: "ativo"
+        status: "ativo",
       });
     });
 
     test("deve preservar campos originais quando existem chaves duplicadas", () => {
       const response = new Response();
       (response as any).include = { id: 999, status: "ativo" };
-      
+
       // Acessando método protegido para teste
       const result = (response as any).makeData({ id: 1, name: "Teste" });
-      
+
       // Os campos originais têm precedência sobre os campos incluídos
       expect(result.id).toBe(1);
       expect(result.status).toBe("ativo");
@@ -131,7 +132,7 @@ describe("Response", () => {
         nome: string;
         email: string;
       }
-      
+
       const response = new Response(sampleUser);
       const result = response.make<Usuario>() as Usuario;
       // Verificando se o tipo está correto (em tempo de execução isso é apenas um objeto)

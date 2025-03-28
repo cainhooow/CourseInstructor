@@ -45,7 +45,7 @@ export default class Logger {
   static debug(...args: any[]) {
     console.debug(
       `[${magenta("DEBUG")}] ${cyan(new Date().toLocaleString())} - ${blue(
-        args
+        JSON.stringify(args)
       )}`
     );
   }

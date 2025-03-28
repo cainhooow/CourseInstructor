@@ -1,5 +1,5 @@
 import Logger from "@/app/utils/Logger";
-import ResponseEmpty from "../errors/ResponseEmpty";
+import ResponseNotFound from "../errors/ResponseNotFound";
 
 export interface IResponse {
   make<T>(): T | T[] | Error;
@@ -19,17 +19,17 @@ export class Response implements IResponse {
 
   make<T>(): T | T[] | Error {
     if (!this.data) {
-      throw new ResponseEmpty("responses.empty");
+      throw new ResponseNotFound("responses.empty");
     }
-    
+
     if (Array.isArray(this.data) && this.data.length <= 0) {
-      throw new ResponseEmpty("responses.empty");
+      throw new ResponseNotFound("responses.empty");
     }
-    
+
     if (Array.isArray(this.data)) {
       return this.data.map((item: T) => this.makeData(item)) as T[];
     }
-    
+
     return this.makeData(this.data) as T;
   }
 

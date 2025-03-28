@@ -3,7 +3,7 @@ import BillingRepo, {
 } from "@/app/repositories/user/BillingRepo";
 import Cryptor from "@/app/utils/Cryptor";
 import AddressService from "./AddressService";
-import ResponseEmpty from "@/app/http/errors/ResponseEmpty";
+import ResponseNotFound from "@/app/http/errors/ResponseNotFound";
 import ResponseUnauthorized from "@/app/http/errors/ResponseUnauthorized";
 
 export default class BillingService {
@@ -17,7 +17,7 @@ export default class BillingService {
       billingProfile.addressId
     );
     if (!hasAddress) {
-      throw new ResponseEmpty(
+      throw new ResponseNotFound(
         "User cannot have a address for assign to this billing profile"
       );
     }
