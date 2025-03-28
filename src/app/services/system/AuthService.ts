@@ -1,5 +1,6 @@
 import RefreshTokenRepository from "@/app/repositories/user/RefreshTokenRepo";
 import JwtService from "./JwtService";
+import Cryptor from "@/app/utils/Cryptor";
 
 export default class AuthService {
   private SECRET = process.env.AUTH_SERVICE_SECRET as string;
@@ -11,10 +12,12 @@ export default class AuthService {
 
   public async create(userId: string) {
     const newRefreshToken = {
-      id: new Bun.CryptoHasher("sha256", this.SECRET).digest("hex"),
+      id: new Cryptor().random(),
       userId,
       expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
     };
+
+    console.log(newRefreshToken)
 
     const accessToken = this.jwtService.sign(
       {

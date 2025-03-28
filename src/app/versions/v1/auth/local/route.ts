@@ -33,6 +33,7 @@ export default class AuthLocalRouter extends BaseRouter {
       }
 
       try {
+        console.log(user)
         const { accessToken, refreshToken } = await authService.login(user.id);
 
         return res.json(

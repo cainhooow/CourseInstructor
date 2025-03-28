@@ -8,6 +8,13 @@ export default class Cryptor {
     this.SECRET = Buffer.alloc(32, process.env.APP_SECRET);
   };
 
+  public random() {
+    const { randomBytes } = crypto;
+    const random = randomBytes(this.IV_LENGTH * 2);
+
+    return random.toString("hex");
+  }
+
   public encrypt(arg: string) {
     if (!this.SECRET) return;
     const { randomBytes, createCipheriv } = crypto;

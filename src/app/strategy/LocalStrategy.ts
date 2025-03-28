@@ -23,7 +23,6 @@ export default class LocalStrategy extends Strategy {
         if (!user) {
           return done({ message: "Invalid username or password" }, false);
         }
-
         const userPassword = await passwordService.onlyActive(user.id);
         if (!userPassword) {
           return done({ message: "No active passwords" }, false);

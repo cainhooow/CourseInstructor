@@ -6,6 +6,10 @@ import Cryptor from "@/app/utils/Cryptor";
 export default class AddressService {
   constructor(protected repository = new AddressRepo()) {}
 
+  public async findById(id: string) {
+    return await this.repository.findById(id);
+  }
+
   public async findByUserId(userId: string) {
     return await this.repository.findByUserId(userId);
   }
