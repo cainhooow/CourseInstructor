@@ -10,7 +10,7 @@ type TUserAddressRequest = {
 };
 
 export default class UserAddressRequest extends Request<TUserAddressRequest> {
-  constructor(protected req: ExpressRequest) {
+  constructor(protected readonly req: ExpressRequest) {
     super(req, ["country", "state", "city", "street", "address"]);
   }
 

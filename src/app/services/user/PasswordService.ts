@@ -3,7 +3,7 @@ import PasswordRepository, {
 } from "@repos/user/PasswordRepo";
 
 export default class PasswordService {
-  constructor(protected repository = new PasswordRepository()) {}
+  constructor(protected readonly repository = new PasswordRepository()) {}
 
   public async onlyActive(userId: string) {
     return await this.repository.onlyActive(userId);

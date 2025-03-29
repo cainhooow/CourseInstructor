@@ -3,7 +3,7 @@ import { Response } from "../Response";
 import Cryptor from "@/app/utils/Cryptor";
 
 export default class UserAddressResponse extends Response {
-  constructor(protected data: UserAddressDTO | UserAddressDTO[]) {
+  constructor(protected readonly data: UserAddressDTO | UserAddressDTO[]) {
     super(data);
   }
 

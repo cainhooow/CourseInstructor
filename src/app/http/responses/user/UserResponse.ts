@@ -6,7 +6,7 @@ import {
 import { Response } from "../Response";
 
 export default class UserResponse extends Response {
-  constructor(data: UserDTO) {
+  constructor(protected readonly data: UserDTO) {
     super(data);
     this.incremental(data);
   }

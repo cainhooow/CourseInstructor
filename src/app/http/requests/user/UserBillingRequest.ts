@@ -5,9 +5,10 @@ type TUserBillingRequest = {
   name: string;
   document: string;
   address: string;
+  userId: string;
 };
 export default class UserBillingRequest extends Request<TUserBillingRequest> {
-  constructor(protected req: ExpressRequest) {
+  constructor(protected readonly req: ExpressRequest) {
     super(req, ["name", "document", "address"]);
   }
 

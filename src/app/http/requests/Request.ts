@@ -7,7 +7,7 @@ import Logger from "@/app/utils/Logger";
 export interface IRequest<T> {
   validateAsync(): Promise<boolean>;
   hasErrors(): string[];
-  getData<K extends T>(): K;
+  getData<ExtraFields extends Record<string, any> = {}>(): T & ExtraFields;
 }
 
 export default abstract class Request<T extends Record<string, string> = {}>
@@ -18,9 +18,10 @@ export default abstract class Request<T extends Record<string, string> = {}>
 
   private removedFields: string[] = [];
   private optionalFields: string[] = [];
+  private renamedFields: Record<string, string> = {};
 
   constructor(
-    protected req: ExpressRequest,
+    protected readonly req: ExpressRequest,
     private requiredFields: string[],
     protected helper = new ValidationHelper()
   ) {
@@ -183,12 +184,18 @@ export default abstract class Request<T extends Record<string, string> = {}>
     if (this.data.hasOwnProperty(from)) {
       this.data[to] = this.data[from as string];
       delete this.data[from as string];
+      this.renamedFields[from as string] = to;
     }
 
     return this;
   }
 
-  public getData<K extends T>(): K {
-    return this.data as K;
+  public getData<ExtraFields extends Record<string, any> = {}>(): T &
+    ExtraFields {
+    type RenamedFields = {
+      [K in keyof typeof this.renamedFields as (typeof this.renamedFields)[K]]: T[K];
+    };
+
+    return this.data as T & ExtraFields & RenamedFields;
   }
 }

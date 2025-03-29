@@ -6,7 +6,7 @@ export default class AuthService {
   private SECRET = process.env.AUTH_SERVICE_SECRET as string;
 
   constructor(
-    protected repository = new RefreshTokenRepository(),
+    protected readonly repository = new RefreshTokenRepository(),
     protected jwtService = new JwtService()
   ) {}
 

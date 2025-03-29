@@ -9,7 +9,7 @@ export interface IResponse {
 export class Response implements IResponse {
   protected include: Record<string, any> = {};
 
-  constructor(protected data?: any) {}
+  constructor(protected readonly data?: any) {}
 
   addField(key: string, data: any): this {
     Logger.log("DEBUG", `additional field: ${key} to response data`);

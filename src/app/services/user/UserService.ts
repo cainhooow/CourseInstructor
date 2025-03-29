@@ -6,7 +6,7 @@ type CreatableUser = Omit<UserDTO, "id" | "created_at" | "updated_at">;
 
 export default class UserService {
   constructor(
-    protected repository = new UserRepository(),
+    protected readonly repository = new UserRepository(),
     protected service = new FlagService()
   ) {}
 

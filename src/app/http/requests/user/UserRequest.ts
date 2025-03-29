@@ -8,7 +8,7 @@ type TUserRequest = {
 };
 
 export default class UserRequest extends Request<TUserRequest> {
-  constructor(protected req: ExpressRequest) {
+  constructor(protected readonly req: ExpressRequest) {
     super(req, [""]);
   }
 

@@ -7,7 +7,7 @@ type TUserProfileRequest = {
 };
 
 export default class UserProfileRequest extends Request<TUserProfileRequest> {
-  constructor(protected req: ExpressRequest) {
+  constructor(protected readonly req: ExpressRequest) {
     super(req, ["bio", "type"]);
   }
 

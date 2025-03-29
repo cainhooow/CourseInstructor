@@ -8,7 +8,7 @@ import ResponseUnauthorized from "@/app/http/errors/ResponseUnauthorized";
 
 export default class BillingService {
   constructor(
-    protected repository = new BillingRepo(),
+    protected readonly repository = new BillingRepo(),
     protected addressService = new AddressService()
   ) {}
 

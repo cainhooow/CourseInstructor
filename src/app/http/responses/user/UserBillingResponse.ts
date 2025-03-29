@@ -3,7 +3,7 @@ import { Response } from "../Response";
 import Cryptor from "@/app/utils/Cryptor";
 
 export default class UserBillingResponse extends Response {
-  constructor(protected data: UserBillingDTO | UserBillingDTO[]) {
+  constructor(protected readonly data: UserBillingDTO | UserBillingDTO[]) {
     super();
   }
 

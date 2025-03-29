@@ -2,7 +2,7 @@ import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
 import { Response } from "../Response";
 
 export default class UserProfileResponse extends Response {
-  constructor(protected data: UserProfileDTO | UserProfileDTO[]) {
+  constructor(protected readonly data: UserProfileDTO | UserProfileDTO[]) {
     super();
   }
 

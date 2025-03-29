@@ -19,7 +19,7 @@ export default class BillingRouter extends BaseRouter {
       validator
         .renameField("address", "addressId")
         .appendField("userId", user.id)
-        .getData()
+        .getData<{ addressId: string }>()
     );
 
     res.json(new UserBillingResponse(data).make());

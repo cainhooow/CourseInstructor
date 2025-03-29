@@ -3,7 +3,7 @@ import LoginProviderRepository, {
 } from "@/app/repositories/user/LoginProviderRepo";
 
 export default class LoginProviderService {
-  constructor(protected repository = new LoginProviderRepository()) {}
+  constructor(protected readonly repository = new LoginProviderRepository()) {}
 
   public async create(provider: CreateableProvider) {
     return await this.repository.create(provider);
