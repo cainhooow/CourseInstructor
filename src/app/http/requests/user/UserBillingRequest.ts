@@ -14,7 +14,7 @@ export default class UserBillingRequest extends Request<TUserBillingRequest> {
 
   protected rules(): Record<string, string> {
     return {
-      name: "string|min:5|max:80",
+      name: "string|min:5|max:150",
       document: "string|min:5|max:18",
       address: "string|min:15",
     };
