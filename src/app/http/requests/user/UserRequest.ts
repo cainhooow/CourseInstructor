@@ -9,7 +9,7 @@ type TUserRequest = {
 
 export default class UserRequest extends Request<TUserRequest> {
   constructor(protected readonly req: ExpressRequest) {
-    super(req, ["email, password", "display_name"]);
+    super(req, ["email", "password", "display_name"]);
   }
 
   protected rules(): Record<string, string> {

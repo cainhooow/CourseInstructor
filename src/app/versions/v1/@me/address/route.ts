@@ -6,7 +6,7 @@ import UserAddressResponse from "@/app/http/responses/user/UserAddressResponse";
 import { UserDTO } from "@/app/dto/user/UserDTO";
 
 export default class AddressRouter extends BaseRouter {
-  constructor(protected service = new AddressService()) {
+  constructor(protected readonly service = new AddressService()) {
     super({ prefix: "/address" });
   }
 

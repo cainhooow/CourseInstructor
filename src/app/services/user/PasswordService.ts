@@ -10,6 +10,13 @@ export default class PasswordService {
   }
 
   public async create(password: CreatablePassword) {
+    const passwordHash = Bun.password.hashSync(password.password, {
+      algorithm: "bcrypt",
+      cost: 10,
+    });
+
+    password.password = passwordHash;
+
     return await this.repository.create(password);
   }
 }

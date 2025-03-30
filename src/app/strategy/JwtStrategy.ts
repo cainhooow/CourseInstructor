@@ -7,7 +7,7 @@ export default class JwtAuthStrategy extends Strategy {
   protected name = "jwt";
   protected strategy: JwtStrategy;
 
-  constructor(protected service = new UserService()) {
+  constructor(protected readonly service = new UserService()) {
     super();
 
     this.strategy = new JwtStrategy(
@@ -25,7 +25,7 @@ export default class JwtAuthStrategy extends Strategy {
         if (!user) {
           return done(null, false);
         }
-        
+
         return done(null, user);
       }
     );

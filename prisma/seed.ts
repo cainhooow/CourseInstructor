@@ -12,15 +12,17 @@ async function main() {
   await prisma.flag.deleteMany();
   await prisma.platformSetting.deleteMany();
 
-  const category = await prisma.category.createMany({
+  await prisma.category.createMany({
     data: DefaultCategories,
   });
-  const flags = await prisma.flag.createMany({
+  await prisma.flag.createMany({
     data: DefaultFlags(),
   });
-  const settings = await prisma.platformSetting.createMany({
+  await prisma.platformSetting.createMany({
     data: DefaultPlatformSettings,
   });
+
+  console.log("✅ Success!")
 }
 
 main()

@@ -7,7 +7,7 @@ import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
 import UserProfileRequest from "@/app/http/requests/user/UserProfileRequest";
 
 export default class ProfileRouter extends BaseRouter {
-  constructor(protected service = new ProfileService()) {
+  constructor(protected readonly service = new ProfileService()) {
     super({
       prefix: "/profile",
     });

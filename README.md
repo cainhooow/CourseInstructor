@@ -15,6 +15,8 @@
 
 💠 PgSql `Usado no container docker em dev mode`
 
+💠 Redis Server `Usado na aplicação(container docker) para cache e reduzir o tempo de resposta do servidor`
+
 Alguns requisitos são opcionais dependendo da preferencia: NodeJS ou Bun.
 
 Caso não queira ou não possua o Docker, use o [SupaBase](https://supabase.com) para o banco de dados.

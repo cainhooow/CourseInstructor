@@ -1,8 +1,8 @@
 import ValidationHelper from "@/app/helpers/ValidationHelper";
 import { Validator } from "@courseinstructor/validator";
-import { ValidationError } from "../errors/ValidationError";
 import { Request as ExpressRequest } from "express";
 import Logger from "@/app/utils/Logger";
+import ValidationError from "../errors/ValidationError";
 
 export interface IRequest<T> {
   validateAsync(): Promise<boolean>;
@@ -10,7 +10,7 @@ export interface IRequest<T> {
   getData<ExtraFields extends Record<string, any> = {}>(): T & ExtraFields;
 }
 
-export default abstract class Request<T extends Record<string, string> = {}>
+export default class Request<T extends Record<string, string> = {}>
   implements IRequest<T>
 {
   protected errors: string[] = [];
@@ -23,7 +23,7 @@ export default abstract class Request<T extends Record<string, string> = {}>
   constructor(
     protected readonly req: ExpressRequest,
     private requiredFields: string[],
-    protected helper = new ValidationHelper()
+    protected readonly helper = new ValidationHelper()
   ) {
     this.data = req.body || {};
   }

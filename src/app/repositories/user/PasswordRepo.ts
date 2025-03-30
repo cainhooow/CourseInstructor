@@ -5,7 +5,7 @@ import { Password, Prisma } from "@prisma/client";
 
 export type CreatablePassword = Omit<
   UserPasswordDTO,
-  "id" | "created_at" | "updated_at"
+  "id" | "created_at" | "updated_at" | "active"
 >;
 
 export default class PasswordRepository extends Repository<

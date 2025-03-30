@@ -3,10 +3,8 @@ import JwtService from "./JwtService";
 import Cryptor from "@/app/utils/Cryptor";
 
 export default class AuthService {
-  private SECRET = process.env.AUTH_SERVICE_SECRET as string;
-
   constructor(
-    protected readonly repository = new RefreshTokenRepository(),
+    protected repository = new RefreshTokenRepository(),
     protected jwtService = new JwtService()
   ) {}
 

@@ -21,6 +21,8 @@ enum ProfileType {
 }
 
 enum FlagsType {
+  CAN_LOGIN
+  CAN_LIST_COURSE
   CAN_POST_COURSE
   CAN_EDIT_COURSE
   CAN_ADD_MODERATORS

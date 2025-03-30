@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Middleware from "./Middleware";
 import { BaseError } from "../http/errors/BaseError";
-import { ValidationError } from "../http/errors/ValidationError";
+import ValidationError from "../http/errors/ValidationError";
 import Logger from "../utils/Logger";
 
 export default class ErrorMiddleware extends Middleware {
@@ -9,10 +9,10 @@ export default class ErrorMiddleware extends Middleware {
     err: Error,
     req: Request,
     res: Response,
-    next: NextFunction
+    _next: NextFunction
   ): void {
     if (err instanceof ValidationError) {
-      Logger.error("Validation error:", err.message, err.errors);
+      Logger.error("Validation error:", err.message, (err as any).errors);
       res.status(400).json({
         message: req.t(err.message),
         errors: err.errors,
@@ -36,6 +36,6 @@ export default class ErrorMiddleware extends Middleware {
       err: err.message,
     });
 
-    next(err);
+    _next()
   }
 }

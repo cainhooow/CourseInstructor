@@ -9,7 +9,7 @@ import ResponseUnauthorized from "@/app/http/errors/ResponseUnauthorized";
 export default class BillingService {
   constructor(
     protected readonly repository = new BillingRepo(),
-    protected addressService = new AddressService()
+    protected readonly addressService = new AddressService()
   ) {}
 
   public async create(billingProfile: CreatableProfileBilling) {

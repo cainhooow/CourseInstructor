@@ -8,8 +8,8 @@ export default class LocalStrategy extends Strategy {
   protected strategy: PassportLocal;
 
   constructor(
-    protected service = new UserService(),
-    protected passwordService = new PasswordService()
+    protected readonly service = new UserService(),
+    protected readonly passwordService = new PasswordService()
   ) {
     super();
 

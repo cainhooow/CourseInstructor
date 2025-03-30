@@ -1,6 +1,5 @@
 import express from "express";
 import Middleware from "../middleware/Middleware";
-import Logger from "./Logger";
 
 interface Options {
   prefix?: string;
@@ -47,10 +46,6 @@ export default class BaseRouter implements RouterHandler {
 
   private applyMiddlewares() {
     this.middlewares.forEach((middleware) => {
-      Logger.log(
-        "DEBUG",
-        `apply middleware: ${middleware.constructor.name} for ${this.prefix}`
-      );
       this.router.use(middleware.handle.bind(middleware));
     });
   }
@@ -61,10 +56,6 @@ export default class BaseRouter implements RouterHandler {
         "handleError" in middleware &&
         Middleware.prototype.handleError !== middleware.handleError
       ) {
-        Logger.log(
-          "DEBUG",
-          `apply errors: ${middleware.constructor.name} for ${this.prefix}`
-        );
         this.router.use(middleware.handleError.bind(middleware));
       }
     });

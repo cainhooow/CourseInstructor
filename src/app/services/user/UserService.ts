@@ -7,7 +7,7 @@ type CreatableUser = Omit<UserDTO, "id" | "created_at" | "updated_at">;
 export default class UserService {
   constructor(
     protected readonly repository = new UserRepository(),
-    protected service = new FlagService()
+    protected readonly service = new FlagService()
   ) {}
 
   public async findById(id: string) {
@@ -25,7 +25,15 @@ export default class UserService {
   }
 
   public async createWithFlags(user: CreatableUser) {
-    const flags = await this.service.selectOnly([]);
+    const flags = await this.service.selectOnly([
+      {
+        name: "CAN_LIST_COURSE",
+      },
+      {
+        name: "CAN_LOGIN",
+      },
+    ]);
+
     if (!flags) return;
     return await this.repository.createWithFlags(user, flags);
   }

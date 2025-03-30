@@ -4,7 +4,6 @@ import { createPrismaRedisCache } from "prisma-redis-middleware";
 import Logger from "../utils/Logger";
 
 export const $ = new prisma.PrismaClient();
-export const { Prisma } = prisma;
 
 const redis = new Redis(1000, "localhost");
 
@@ -37,4 +36,5 @@ const cacheMiddleware: prisma.Prisma.Middleware = createPrismaRedisCache({
   },
 });
 
+export const { Prisma } = prisma;
 $.$use(cacheMiddleware);

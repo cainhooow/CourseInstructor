@@ -20,7 +20,7 @@ export default class UserResponse extends Response {
     }
 
     if ("Flags" in data && (data as UserWithFlagsDTO).Flags.length > 0) {
-      this.addField("flags", data.Flags);
+      this.addField("flags", data.Flags.map((flag) => (flag.name)));
     }
   }
 

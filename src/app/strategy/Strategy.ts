@@ -10,6 +10,6 @@ export default abstract class Strategy implements IStrategy {
   protected abstract name: string;
 
   public register(): void {
-      passport.use(this.name, this.strategy);
+    passport.use(this.name, this.strategy);
   }
 }

@@ -6,7 +6,7 @@ import BaseRouter from "@/app/utils/BaseRouter";
 import { Request, Response } from "express";
 
 export default class BillingRouter extends BaseRouter {
-  constructor(protected service = new BillingService()) {
+  constructor(protected readonly service = new BillingService()) {
     super({ prefix: "/billing" });
   }
 

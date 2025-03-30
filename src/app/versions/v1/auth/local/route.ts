@@ -7,12 +7,15 @@ import UserService from "@/app/services/user/UserService";
 import UserResponse from "@/app/http/responses/user/UserResponse";
 import AuthService from "@/app/services/system/AuthService";
 import LoginProviderService from "@/app/services/user/LoginProviderService";
+import Logger from "@/app/utils/Logger";
+import PasswordService from "@/app/services/user/PasswordService";
 
 export default class AuthLocalRouter extends BaseRouter {
   constructor(
-    protected service = new UserService(),
-    protected authService = new AuthService(),
-    protected providerService = new LoginProviderService()
+    protected readonly service = new UserService(),
+    protected readonly passwordService = new PasswordService(),
+    protected readonly authService = new AuthService(),
+    protected readonly providerService = new LoginProviderService()
   ) {
     super({ prefix: "/local" });
   }
@@ -32,7 +35,6 @@ export default class AuthLocalRouter extends BaseRouter {
       }
 
       try {
-        console.log(user);
         const { accessToken, refreshToken } = await authService.login(user.id);
 
         return res.json(
@@ -49,26 +51,21 @@ export default class AuthLocalRouter extends BaseRouter {
 
   private async register(req: Request, res: Response) {
     const validator = new UserRequest(req);
-
-    if (!(await validator.validateAsync())) {
-      res.status(400).json({ errors: validator.hasErrors() });
-      return;
-    }
+    await validator.validateAsync();
 
     const { email, display_name, password } = validator.getData();
 
     try {
-      const createdUser = await this.service.createWithPassword(
-        {
-          email,
-          display_name,
-        },
-        password
-      );
+      const createdUser = await this.service.createWithFlags({
+        email,
+        display_name,
+      });
 
       if (!createdUser) {
         throw new Error("User not created");
       }
+
+      await this.passwordService.create({ password, userId: createdUser.id });
 
       await this.providerService.create({
         name: ProviderType.LOCAL,
@@ -77,10 +74,15 @@ export default class AuthLocalRouter extends BaseRouter {
 
       res.json(new UserResponse(createdUser as any).make());
     } catch (err) {
+      Logger.log("ERROR", err);
       throw err;
-    }
+    } 
   }
 
+  private async index(req: Request, res: Response) {
+    res.json({ m: "ok" });
+  }
+  
   public route(): void {
     this.router.post("/", this.local.bind(this));
     this.router.post("/register", this.register.bind(this));
