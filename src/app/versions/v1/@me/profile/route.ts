@@ -1,19 +1,19 @@
 import { Request, Response } from "express";
 import { UserDTO } from "@/app/dto/user/UserDTO";
-import BaseRouter from "@/app/utils/BaseRouter";
+import BaseRouter, { Get, Post, Route } from "@/app/utils/BaseRouter";
 import ProfileService from "@/app/services/user/ProfileService";
 import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
 import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
 import UserProfileRequest from "@/app/http/requests/user/UserProfileRequest";
 
+@Route("/profile")
 export default class ProfileRouter extends BaseRouter {
   constructor(protected readonly service = new ProfileService()) {
-    super({
-      prefix: "/profile",
-    });
+    super();
   }
 
-  private async index(req: Request, res: Response) {
+  @Get("/")
+  async index(req: Request, res: Response) {
     const authUser = req.user as UserDTO;
     const user = (await this.service.findByUserId(
       authUser.id
@@ -22,7 +22,8 @@ export default class ProfileRouter extends BaseRouter {
     res.json(new UserProfileResponse(user).make());
   }
 
-  private async create(req: Request, res: Response) {
+  @Post("/")
+  async create(req: Request, res: Response) {
     const validator = new UserProfileRequest(req);
 
     if (!(await validator.validateAsync())) {
@@ -37,7 +38,8 @@ export default class ProfileRouter extends BaseRouter {
     res.json(new UserProfileResponse(data).make());
   }
 
-  private async update(req: Request, res: Response) {
+  @Post("/update")
+  async update(req: Request, res: Response) {
     const validator = new UserProfileRequest(req).removeField("type");
     await validator.validateAsync();
 
@@ -52,9 +54,5 @@ export default class ProfileRouter extends BaseRouter {
     res.json(new UserProfileResponse(data as UserProfileDTO).make());
   }
 
-  public route(): void {
-    this.router.get("/", this.index.bind(this));
-    this.router.post("/", this.create.bind(this));
-    this.router.post("/update", this.update.bind(this));
-  }
+  public route(): void {}
 }

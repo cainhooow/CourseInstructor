@@ -1,15 +1,17 @@
-import { Request, Response } from "express";
-import BaseRouter from "@/app/utils/BaseRouter";
+import type { Request, Response } from "express";
+import BaseRouter, { Post, Route } from "@/app/utils/BaseRouter";
 import AuthLocalRouter from "./local/route";
 import AuthService from "@/app/services/system/AuthService";
 import RefreshTokenRequest from "@/app/http/requests/auth/RefreshTokenRequest";
 
+@Route("/auth")
 export default class AuthRouter extends BaseRouter {
   constructor(protected readonly authService = new AuthService()) {
-    super({ prefix: "/auth" });
+    super();
   }
 
-  private async refreshToken(req: Request, res: Response) {
+  @Post("/refresh")
+  async refreshToken(req: Request, res: Response) {
     const validator = new RefreshTokenRequest(req);
     const validated = await validator.validateAsync();
 
@@ -27,7 +29,6 @@ export default class AuthRouter extends BaseRouter {
   }
 
   public route(): void {
-    this.router.post("/refresh", this.refreshToken.bind(this)); 
     this.router.use(new AuthLocalRouter().getRouter());
   }
 }

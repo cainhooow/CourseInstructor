@@ -7,6 +7,7 @@ import LocalStrategy from "./strategy/LocalStrategy";
 import JwtAuthStrategy from "./strategy/JwtStrategy";
 import Logger from "./utils/Logger";
 import { handle, i18next } from "@courseinstructor/resources";
+
 export default class App {
   private app = express();
   private port: number;
@@ -30,13 +31,13 @@ export default class App {
   private _configure() {
     Logger.log("INFO", "Configuring app defaults");
     dotenv.config();
-    
+
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(passport.initialize());
     this.app.use(handle(i18next as any));
-    
+
     this._router();
     this._strategy();
   }

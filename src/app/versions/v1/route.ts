@@ -1,12 +1,11 @@
-import BaseRouter from "@/app/utils/BaseRouter";
+import BaseRouter, { Route } from "@/app/utils/BaseRouter";
 import AuthRouter from "./auth/route";
 import MeRouter from "./@me/route";
 
+@Route("/v1")
 export default class V1Router extends BaseRouter {
   constructor() {
-    super({
-      prefix: "/v1",
-    });
+    super();
   }
 
   public route(): void {

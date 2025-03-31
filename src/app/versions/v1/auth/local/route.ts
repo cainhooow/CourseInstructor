@@ -1,6 +1,6 @@
 import { ProviderType } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
-import BaseRouter from "@/app/utils/BaseRouter";
+import BaseRouter, { Post, Route } from "@/app/utils/BaseRouter";
 import passport from "passport";
 import UserRequest from "@/app/http/requests/user/UserRequest";
 import UserService from "@/app/services/user/UserService";
@@ -9,7 +9,9 @@ import AuthService from "@/app/services/system/AuthService";
 import LoginProviderService from "@/app/services/user/LoginProviderService";
 import Logger from "@/app/utils/Logger";
 import PasswordService from "@/app/services/user/PasswordService";
+import RoleMiddleware from "@/app/middleware/RoleMiddleware";
 
+@Route("/local")
 export default class AuthLocalRouter extends BaseRouter {
   constructor(
     protected readonly service = new UserService(),
@@ -17,10 +19,11 @@ export default class AuthLocalRouter extends BaseRouter {
     protected readonly authService = new AuthService(),
     protected readonly providerService = new LoginProviderService()
   ) {
-    super({ prefix: "/local" });
+    super();
   }
 
-  private local(req: Request, res: Response, next: NextFunction) {
+  @Post("/local", [new RoleMiddleware(["CAN_LOGIN"])])
+  local(req: Request, res: Response, next: NextFunction) {
     const authService = this.authService;
 
     passport.authenticate("local", async function (err: any, user: any) {
@@ -49,7 +52,8 @@ export default class AuthLocalRouter extends BaseRouter {
     })(req, res, next);
   }
 
-  private async register(req: Request, res: Response) {
+  @Post("/register")
+  async register(req: Request, res: Response) {
     const validator = new UserRequest(req);
     await validator.validateAsync();
 
@@ -76,15 +80,8 @@ export default class AuthLocalRouter extends BaseRouter {
     } catch (err) {
       Logger.log("ERROR", err);
       throw err;
-    } 
+    }
   }
 
-  private async index(req: Request, res: Response) {
-    res.json({ m: "ok" });
-  }
-  
-  public route(): void {
-    this.router.post("/", this.local.bind(this));
-    this.router.post("/register", this.register.bind(this));
-  }
+  public route(): void {}
 }
