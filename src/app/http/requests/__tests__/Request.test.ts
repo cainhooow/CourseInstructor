@@ -1,6 +1,6 @@
 import { describe, test, expect, mock, beforeEach } from "bun:test";
 import Request from "../Request";
-import { ValidationError } from "../../errors/ValidationError";
+import ValidationError  from "../../errors/ValidationError";
 
 // Mock das dependências
 const mockUnique = mock(() => Promise.resolve(true));

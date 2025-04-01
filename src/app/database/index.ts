@@ -21,7 +21,6 @@ const cacheMiddleware: prisma.Prisma.Middleware = createPrismaRedisCache({
       invalidation: {
         referencesTTL: 300,
       },
-      log: Logger,
     },
   },
   cacheTime: 300,

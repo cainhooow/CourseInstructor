@@ -9,7 +9,7 @@ import AuthService from "@/app/services/system/AuthService";
 import LoginProviderService from "@/app/services/user/LoginProviderService";
 import Logger from "@/app/utils/Logger";
 import PasswordService from "@/app/services/user/PasswordService";
-import RoleMiddleware from "@/app/middleware/RoleMiddleware";
+import { Validatate } from "@/app/http/requests/Request";
 
 @Route("/local")
 export default class AuthLocalRouter extends BaseRouter {
@@ -22,7 +22,7 @@ export default class AuthLocalRouter extends BaseRouter {
     super();
   }
 
-  @Post("/local", [new RoleMiddleware(["CAN_LOGIN"])])
+  @Post("/")
   local(req: Request, res: Response, next: NextFunction) {
     const authService = this.authService;
 
@@ -53,11 +53,9 @@ export default class AuthLocalRouter extends BaseRouter {
   }
 
   @Post("/register")
+  @Validatate(UserRequest)
   async register(req: Request, res: Response) {
-    const validator = new UserRequest(req);
-    await validator.validateAsync();
-
-    const { email, display_name, password } = validator.getData();
+    const { email, display_name, password } = req.body;
 
     try {
       const createdUser = await this.service.createWithFlags({

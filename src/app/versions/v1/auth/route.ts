@@ -3,6 +3,7 @@ import BaseRouter, { Post, Route } from "@/app/utils/BaseRouter";
 import AuthLocalRouter from "./local/route";
 import AuthService from "@/app/services/system/AuthService";
 import RefreshTokenRequest from "@/app/http/requests/auth/RefreshTokenRequest";
+import { Validatate } from "@/app/http/requests/Request";
 
 @Route("/auth")
 export default class AuthRouter extends BaseRouter {
@@ -11,16 +12,9 @@ export default class AuthRouter extends BaseRouter {
   }
 
   @Post("/refresh")
+  @Validatate(RefreshTokenRequest)
   async refreshToken(req: Request, res: Response) {
-    const validator = new RefreshTokenRequest(req);
-    const validated = await validator.validateAsync();
-
-    if (!validated) {
-      res.status(400).json({ errors: validator.hasErrors() });
-      return;
-    }
-
-    const data = validator.getData<{ refreshToken: string }>();
+    const data = req.body;
     const { refreshToken, accessToken } = await this.authService.renew(
       data.refreshToken
     );

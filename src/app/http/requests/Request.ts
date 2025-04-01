@@ -1,6 +1,10 @@
 import ValidationHelper from "@/app/helpers/ValidationHelper";
 import { Validator } from "@courseinstructor/validator";
-import { Request as ExpressRequest } from "express";
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+  NextFunction,
+} from "express";
 import Logger from "@/app/utils/Logger";
 import ValidationError from "../errors/ValidationError";
 
@@ -8,6 +12,74 @@ export interface IRequest<T> {
   validateAsync(): Promise<boolean>;
   hasErrors(): string[];
   getData<ExtraFields extends Record<string, any> = {}>(): T & ExtraFields;
+}
+
+type ValidateOptions<T> =
+  | {
+      appendFields?: Partial<T> & Record<string, any>;
+      removeFields?: (keyof T | string)[];
+      optionalFields?: (keyof T | string)[];
+      renameFields?: Record<keyof T | string, string>;
+    }
+  | ((req: ExpressRequest) => {
+      appendFields?: Partial<T> & Record<string, any>;
+      removeFields?: (keyof T | string)[];
+      optionalFields?: (keyof T | string)[];
+      renameFields?: Record<keyof T | string, string>;
+    });
+
+export function Validatate<T extends Record<string, any> = {}>(
+  ValidatorClass: new (req: ExpressRequest) => Request<T>,
+  options?: ValidateOptions<T>
+) {
+  return function (
+    _target: any,
+    _propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) {
+    const originalMethod = descriptor.value;
+
+    descriptor.value = async function (
+      req: ExpressRequest,
+      res: ExpressResponse,
+      next: NextFunction
+    ) {
+      try {
+        const validator = new ValidatorClass(req);
+        await validator.validateAsync();
+
+        const opt =
+          typeof options === "function" ? options(req as any) : options;
+
+        if (opt?.removeFields) {
+          validator.removeFields(opt.removeFields as string[]);
+        }
+
+        if (opt?.optionalFields) {
+          validator.optionals(opt.optionalFields as string[]);
+        }
+
+        if (opt?.renameFields) {
+          for (const [from, to] of Object.entries(opt.renameFields)) {
+            validator.renameField(from, to);
+          }
+        }
+
+        if (opt?.appendFields) {
+          for (const [key, value] of Object.entries(opt.appendFields)) {
+            validator.appendField(key, value);
+          }
+        }
+
+        req.body = validator.getData();
+        return await originalMethod.apply(this, [req, res, next]);
+      } catch (err) {
+        throw err;
+      }
+    };
+
+    return descriptor;
+  };
 }
 
 export default class Request<T extends Record<string, string> = {}>

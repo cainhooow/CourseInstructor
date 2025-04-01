@@ -1,5 +1,4 @@
-import { Flag, FlagsType } from "@prisma/client";
-import { DefaultOmission } from "../seed";
+import { FlagsType } from "@prisma/client";
 
 export const DefaultFlags = () => {
   const items = Object.values(FlagsType);

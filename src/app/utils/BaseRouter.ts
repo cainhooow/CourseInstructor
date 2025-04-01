@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import Middleware from "../middleware/Middleware";
 import Logger from "./Logger";
 
@@ -61,10 +61,14 @@ function createRouteDecorator(method: string) {
       descriptor.value = async function (
         req: Request,
         res: Response,
-        next: Function
+        next: NextFunction
       ) {
         for (const middleware of middlewares) {
-          await middleware(req, res, next);
+          if (middleware instanceof Middleware) {
+            await middleware.handle(req, res, next);
+          } else {
+            await middleware(req, res, next);
+          }
         }
         return originalMethod.apply(this, [req, res, next]);
       };
@@ -84,7 +88,7 @@ export default class BaseRouter implements RouterHandler {
   private middlewares: Middleware[];
   private init: boolean = false;
   //#endregion
-  
+
   constructor(options: Options = {}) {
     this.router = express.Router();
     this.prefix = options.prefix || "";
@@ -101,7 +105,6 @@ export default class BaseRouter implements RouterHandler {
 
     for (const { method, path, middlewares, handler } of routes) {
       const handlerFunction = (this as any)[handler];
-
       if (middlewares.lenght > 0) {
         (this.router as any)[method](
           path,

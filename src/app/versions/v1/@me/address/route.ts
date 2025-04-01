@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import { Request as ExpressRequest, Response } from "express";
 import AddressService from "@/app/services/user/AddressService";
 import BaseRouter, { Post, Route } from "@/app/utils/BaseRouter";
 import UserAddressRequest from "@/app/http/requests/user/UserAddressRequest";
 import UserAddressResponse from "@/app/http/responses/user/UserAddressResponse";
 import { UserDTO } from "@/app/dto/user/UserDTO";
+import { Validatate } from "@/app/http/requests/Request";
 
 @Route("/address")
 export default class AddressRouter extends BaseRouter {
@@ -12,16 +13,11 @@ export default class AddressRouter extends BaseRouter {
   }
 
   @Post("/")
-  async create(req: Request, res: Response) {
-    const validator = new UserAddressRequest(req);
-    await validator.validateAsync();
-
-    const user = req.user as UserDTO;
-
-    const data = await this.service.create(
-      validator.appendField("userId", user.id).getData()
-    );
-
+  @Validatate(UserAddressRequest, (req: ExpressRequest) => ({
+    appendFields: { userId: (req.user as UserDTO).id },
+  }))
+  async create(req: ExpressRequest, res: Response) {
+    const data = await this.service.create(req.body);
     res.json(new UserAddressResponse(data).make());
   }
 

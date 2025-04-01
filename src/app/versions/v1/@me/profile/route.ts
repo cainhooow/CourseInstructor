@@ -5,6 +5,7 @@ import ProfileService from "@/app/services/user/ProfileService";
 import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
 import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
 import UserProfileRequest from "@/app/http/requests/user/UserProfileRequest";
+import { Validatate } from "@/app/http/requests/Request";
 
 @Route("/profile")
 export default class ProfileRouter extends BaseRouter {
@@ -23,34 +24,23 @@ export default class ProfileRouter extends BaseRouter {
   }
 
   @Post("/")
+  @Validatate(UserProfileRequest, (req) => ({
+    appendFields: {
+      userId: (req.user as UserDTO).id,
+    },
+  }))
   async create(req: Request, res: Response) {
-    const validator = new UserProfileRequest(req);
-
-    if (!(await validator.validateAsync())) {
-      res.json({ message: validator.hasErrors() });
-      return;
-    }
-
-    const user = req.user as UserDTO;
-    const data = await this.service.create(
-      validator.appendField("userId", user.id).getData()
-    );
+    const data = await this.service.create(req.body);
     res.json(new UserProfileResponse(data).make());
   }
 
   @Post("/update")
+  @Validatate(UserProfileRequest, {
+    removeFields: ["type"],
+  })
   async update(req: Request, res: Response) {
-    const validator = new UserProfileRequest(req).removeField("type");
-    await validator.validateAsync();
-
     const user = req.user as UserDTO & { Profile: UserProfileDTO };
-
-    const data = await this.service.update(
-      user.Profile.id,
-      user.id,
-      validator.getData()
-    );
-
+    const data = await this.service.update(user.Profile.id, user.id, req.body);
     res.json(new UserProfileResponse(data as UserProfileDTO).make());
   }
 

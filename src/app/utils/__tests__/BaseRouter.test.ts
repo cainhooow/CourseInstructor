@@ -1,7 +1,6 @@
 import { describe, test, expect, mock, spyOn, beforeEach } from "bun:test";
 import BaseRouter from "../BaseRouter";
 import Middleware from "../../middleware/Middleware";
-import express from "express";
 
 // Mock para express.Router
 const mockRouter = {
@@ -19,12 +18,12 @@ class TestMiddleware extends Middleware {
     super();
   }
 
-  handle(req: any, res: any, next: any): void {
+  handle(_req: any, _res: any, next: any): void {
     this.handleCalled = true;
     next();
   }
 
-  handleError(err: any, req: any, res: any, next: any): void {
+  handleError(err: any, _req: any, _res: any, next: any): void {
     this.handleErrorCalled = true;
     next(err);
   }
@@ -32,7 +31,7 @@ class TestMiddleware extends Middleware {
 
 // Classe de middleware sem handleError personalizado
 class SimpleMiddleware extends Middleware {
-  handle(req: any, res: any, next: any): void {
+  handle(_req: any, _res: any, next: any): void {
     next();
   }
 }
@@ -86,6 +85,7 @@ describe("BaseRouter", () => {
     
     test("deve ser chamado por getRouter", () => {
       const router = testRouter.getRouter();
+      console.log(router)
       expect(testRouter.routeCalled).toBe(true);
     });
   });
@@ -176,7 +176,7 @@ describe("BaseRouter", () => {
       
       public route(): void {
         this.routeImplemented = true;
-        this.router.use("/custom", (req, res) => {res.send("ok")});
+        this.router.use("/custom", (_req, res) => {res.send("ok")});
       }
     }
     
