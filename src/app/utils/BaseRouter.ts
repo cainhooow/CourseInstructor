@@ -78,7 +78,11 @@ function createRouteDecorator(method: string) {
 }
 
 export const Get = createRouteDecorator("get");
+export const Put = createRouteDecorator("put")
 export const Post = createRouteDecorator("post");
+export const Patch = createRouteDecorator("patch");
+export const Head = createRouteDecorator("head");
+export const Delete = createRouteDecorator("delete");
 //#endregion
 
 export default class BaseRouter implements RouterHandler {

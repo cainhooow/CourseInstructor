@@ -7,6 +7,7 @@ import BaseRouter, { Get, Middlewares, Route } from "@/app/utils/BaseRouter";
 import ProfileRouter from "./profile/route";
 import BillingRouter from "./billing/route";
 import AddressRouter from "./address/route";
+import CourseRouter from "./courses/route";
 
 @Route("/@me")
 @Middlewares([new AuthMiddleware("jwt")])
@@ -24,5 +25,6 @@ export default class MeRouter extends BaseRouter {
     this.router.use(new ProfileRouter().getRouter());
     this.router.use(new BillingRouter().getRouter());
     this.router.use(new AddressRouter().getRouter());
+    this.router.use(new CourseRouter().getRouter());
   }
 }

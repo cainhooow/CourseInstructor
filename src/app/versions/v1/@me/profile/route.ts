@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserDTO } from "@/app/dto/user/UserDTO";
-import BaseRouter, { Get, Post, Route } from "@/app/utils/BaseRouter";
+import BaseRouter, { Get, Post, Put, Route } from "@/app/utils/BaseRouter";
 import ProfileService from "@/app/services/user/ProfileService";
 import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
 import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
@@ -34,7 +34,7 @@ export default class ProfileRouter extends BaseRouter {
     res.json(new UserProfileResponse(data).make());
   }
 
-  @Post("/update")
+  @Put("/update")
   @Validatate(UserProfileRequest, {
     removeFields: ["type"],
   })

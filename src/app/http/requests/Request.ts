@@ -28,7 +28,9 @@ type ValidateOptions<T> =
       renameFields?: Record<keyof T | string, string>;
     });
 
-export function Validatate<T extends Record<string, any> = {}>(
+type AcceptedInputValues = string | number | string[];
+  
+export function Validatate<T extends Record<string, AcceptedInputValues> = {}>(
   ValidatorClass: new (req: ExpressRequest) => Request<T>,
   options?: ValidateOptions<T>
 ) {
@@ -82,7 +84,7 @@ export function Validatate<T extends Record<string, any> = {}>(
   };
 }
 
-export default class Request<T extends Record<string, string> = {}>
+export default class Request<T extends Record<string, AcceptedInputValues> = {}>
   implements IRequest<T>
 {
   protected errors: string[] = [];
