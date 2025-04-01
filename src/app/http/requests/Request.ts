@@ -7,7 +7,6 @@ import {
 } from "express";
 import Logger from "@/app/utils/Logger";
 import ValidationError from "../errors/ValidationError";
-import ResponseUnauthorized from "../errors/ResponseUnauthorized";
 
 export interface IRequest<T> {
   validateAsync(): Promise<boolean>;
@@ -110,14 +109,14 @@ export default class Request<T extends Record<string, string> = {}>
     }
 
     for (const field of this.requiredFields) {
-      const bodyKeys = Object.keys(this.req.body)
+      const bodyKeys = Object.keys(this.req.body);
 
       for (const key of bodyKeys) {
         if (!this.requiredFields.includes(key)) {
-          delete this.req.body[key]
+          delete this.req.body[key];
         }
       }
-      
+
       if (
         !(field in this.data) &&
         !this.fieldIsRemoved(field) &&
@@ -130,7 +129,6 @@ export default class Request<T extends Record<string, string> = {}>
         );
         throw new ValidationError(this.errors);
       }
-
     }
 
     await this.applyRulesAsync();
@@ -164,14 +162,15 @@ export default class Request<T extends Record<string, string> = {}>
 
         const validator = new Validator(rule, field, value, this.req.t);
         const validationResult = validator.validate();
-        const fnTransform = /(?<=transform)\./;
+        const transformFnPattern = /(?<=transform)\./;
 
-        if (validationResult && fnTransform.test(validationResult)) {
-          const transformedValue = validationResult.split(fnTransform)[1];
+        if (validationResult && transformFnPattern.test(validationResult)) {
+          const transformedValue =
+            validationResult.split(transformFnPattern)[1];
           this.data[field] = transformedValue;
         }
 
-        if (validationResult && !fnTransform.test(validationResult)) {
+        if (validationResult && !transformFnPattern.test(validationResult)) {
           this.errors.push(validationResult);
         }
 

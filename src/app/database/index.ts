@@ -4,13 +4,12 @@ import { createPrismaRedisCache } from "prisma-redis-middleware";
 import Logger from "../utils/Logger";
 
 export const $ = new prisma.PrismaClient();
-
 const redis = new Redis(1000, "localhost");
 
 const cacheMiddleware: prisma.Prisma.Middleware = createPrismaRedisCache({
   models: [
     { model: "User", cacheTime: 180 },
-    { model: "Profile", cacheTime: 180 },
+    { model: "Flags", cacheTime: 180 },
     { model: "Course", cacheTime: 200 },
     { model: "RefreshToken", cacheTime: 90 },
   ],
