@@ -1,6 +1,6 @@
-import ErrorMiddleware from "../middleware/ErrorMiddleware";
-import LoggerMiddleware from "../middleware/LoggerMiddleware";
-import BaseRouter, { Middlewares, Route } from "../utils/BaseRouter";
+import ErrorMiddleware from "../middleware/error.middleware";
+import LoggerMiddleware from "../middleware/logger.middleware";
+import BaseRouter, { Middlewares, Route } from "../utils/base-router";
 import V1Router from "./v1/route";
 
 @Route("/api")

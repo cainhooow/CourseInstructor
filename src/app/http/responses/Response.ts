@@ -1,5 +1,5 @@
-import Logger from "@/app/utils/Logger";
-import ResponseNotFound from "../errors/ResponseNotFound";
+import Logger from "@/app/utils/logger";
+import ResponseNotFound from "../errors/not-found.error";
 
 export interface IResponse {
   make<T>(): T | T[] | Error;

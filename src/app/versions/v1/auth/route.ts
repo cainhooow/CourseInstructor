@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
-import BaseRouter, { Post, Route } from "@/app/utils/BaseRouter";
+import BaseRouter, { Post, Route } from "@/app/utils/base-router";
 import AuthLocalRouter from "./local/route";
-import AuthService from "@/app/services/system/AuthService";
-import RefreshTokenRequest from "@/app/http/requests/auth/RefreshTokenRequest";
-import { Validatate } from "@/app/http/requests/Request";
+import AuthService from "@/app/services/system/auth.service";
+import RefreshTokenRequest from "@/app/http/requests/auth/refresh-token.request";
+import { Validatate } from "@/app/http/requests/request";
 
 @Route("/auth")
 export default class AuthRouter extends BaseRouter {

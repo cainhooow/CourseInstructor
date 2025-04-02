@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { UserDTO } from "@/app/dto/user/UserDTO";
-import BaseRouter, { Get, Post, Put, Route } from "@/app/utils/BaseRouter";
-import ProfileService from "@/app/services/user/ProfileService";
-import { UserProfileDTO } from "@/app/dto/user/UserProfileDTO";
-import UserProfileResponse from "@/app/http/responses/user/UserProfileResponse";
-import UserProfileRequest from "@/app/http/requests/user/UserProfileRequest";
-import { Validatate } from "@/app/http/requests/Request";
+import { UserDTO } from "@/app/dto/user/user.dto";
+import BaseRouter, { Get, Post, Put, Route } from "@/app/utils/base-router";
+import ProfileService from "@/app/services/user/profile.service";
+import { UserProfileDTO } from "@/app/dto/user/user-profile.dto";
+import UserProfileResponse from "@/app/http/responses/user/user-profile.response";
+import UserProfileRequest from "@/app/http/requests/user/user-profile.request";
+import { Validatate } from "@/app/http/requests/request";
 
 @Route("/profile")
 export default class ProfileRouter extends BaseRouter {

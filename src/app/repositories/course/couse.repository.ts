@@ -1,0 +1,7 @@
+import { Course, Prisma } from "@prisma/client";
+import Repository from "../repository";
+
+export default class CourseRepository extends Repository<
+  Course,
+  Prisma.CourseInclude
+> {}

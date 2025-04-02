@@ -1,9 +1,9 @@
-import { UserDTO } from "@/app/dto/user/UserDTO";
-import { Validatate } from "@/app/http/requests/Request";
-import UserBillingRequest from "@/app/http/requests/user/UserBillingRequest";
-import UserBillingResponse from "@/app/http/responses/user/UserBillingResponse";
-import BillingService from "@/app/services/user/BillingService";
-import BaseRouter, { Post, Route } from "@/app/utils/BaseRouter";
+import { UserDTO } from "@/app/dto/user/user.dto";
+import { Validatate } from "@/app/http/requests/request";
+import UserBillingRequest from "@/app/http/requests/user/user-billing.request";
+import UserBillingResponse from "@/app/http/responses/user/user-billing.response";
+import BillingService from "@/app/services/user/billing.service";
+import BaseRouter, { Post, Route } from "@/app/utils/base-router";
 import { Request, Response } from "express";
 
 @Route("/billing")

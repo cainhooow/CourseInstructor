@@ -3,10 +3,10 @@ import passport from "passport";
 import cors from "cors";
 import dotenv from "dotenv";
 import Router from "./versions/route";
-import LocalStrategy from "./strategy/LocalStrategy";
-import JwtAuthStrategy from "./strategy/JwtStrategy";
-import Logger from "./utils/Logger";
-import { handle, i18next } from "@courseinstructor/resources";
+import LocalStrategy from "./strategy/local.strategy";
+import JwtAuthStrategy from "./strategy/jwt.strategy";
+import Logger from "./utils/logger";
+import { handle, i18next } from "@fastexpress/resources";
 
 export default class App {
   private app = express();

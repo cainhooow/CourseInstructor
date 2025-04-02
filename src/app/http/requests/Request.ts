@@ -1,12 +1,13 @@
-import ValidationHelper from "@/app/helpers/ValidationHelper";
-import { Validator } from "@courseinstructor/validator";
+import ValidationHelper from "@/app/helpers/validation.helper";
+import { Validator } from "@fastexpress/validators";
+
 import {
   Request as ExpressRequest,
   Response as ExpressResponse,
   NextFunction,
 } from "express";
-import Logger from "@/app/utils/Logger";
-import ValidationError from "../errors/ValidationError";
+import Logger from "@/app/utils/logger";
+import ValidationError from "../errors/validation.error";
 
 export interface IRequest<T> {
   validateAsync(): Promise<boolean>;
@@ -29,7 +30,7 @@ type ValidateOptions<T> =
     });
 
 type AcceptedInputValues = string | number | string[];
-  
+
 export function Validatate<T extends Record<string, AcceptedInputValues> = {}>(
   ValidatorClass: new (req: ExpressRequest) => Request<T>,
   options?: ValidateOptions<T>

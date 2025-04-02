@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from "bun:test";
-import Cryptor from "../Cryptor";
+import Cryptor from "../cryptor";
 
 describe("Cryptor", () => {
   let cryptor: Cryptor;

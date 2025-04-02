@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 
-import { UserDTO } from "@/app/dto/user/UserDTO";
-import UserResponse from "@/app/http/responses/user/UserResponse";
-import AuthMiddleware from "@/app/middleware/AuthMiddleware";
-import BaseRouter, { Get, Middlewares, Route } from "@/app/utils/BaseRouter";
+import { UserDTO } from "@/app/dto/user/user.dto";
+import UserResponse from "@/app/http/responses/user/user.response";
+import AuthMiddleware from "@/app/middleware/auth.middleware";
+import BaseRouter, { Get, Middlewares, Route } from "@/app/utils/base-router";
 import ProfileRouter from "./profile/route";
 import BillingRouter from "./billing/route";
 import AddressRouter from "./address/route";

@@ -1,7 +1,7 @@
 import prisma from "@prisma/client";
 import Redis from "ioredis";
 import { createPrismaRedisCache } from "prisma-redis-middleware";
-import Logger from "../utils/Logger";
+import Logger from "../utils/logger";
 
 export const $ = new prisma.PrismaClient();
 const redis = new Redis(1000, "localhost");

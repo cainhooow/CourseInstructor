@@ -1,4 +1,4 @@
-import BaseRouter, { Route } from "@/app/utils/BaseRouter";
+import BaseRouter, { Route } from "@/app/utils/base-router";
 import AuthRouter from "./auth/route";
 import MeRouter from "./@me/route";
 

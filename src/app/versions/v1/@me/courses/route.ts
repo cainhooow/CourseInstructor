@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import BaseRouter, { Post, Route } from "@/app/utils/BaseRouter";
-import RoleMiddleware from "@/app/middleware/RoleMiddleware";
-import { Validatate } from "@/app/http/requests/Request";
-import CourseRequest from "@/app/http/requests/course/CourseRequest";
-import { UserDTO } from "@/app/dto/user/UserDTO";
+import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import RoleMiddleware from "@/app/middleware/role.middleware";
+import { Validatate } from "@/app/http/requests/request";
+import CourseRequest from "@/app/http/requests/course/course.request";
+import { UserDTO } from "@/app/dto/user/user.dto";
 
 @Route("/courses")
 export default class CourseRouter extends BaseRouter {

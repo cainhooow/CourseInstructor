@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from "bun:test";
-import { Response } from "../Response";
-import ResponseNotFound from "../../errors/ResponseNotFound";
+import { Response } from "../response";
+import ResponseNotFound from "../../errors/not-found.error";
 
 describe("Response", () => {
   let userResponse: Response;
