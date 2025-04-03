@@ -1,7 +1,7 @@
 import { $ } from "@/app/database";
 import { UserProfileDTO } from "@/app/dto/user/user-profile.dto";
 import { Prisma, Profile, ProfileType } from "@prisma/client";
-import Repository from "../repository";
+import Repository from "../temp/repository";
 
 export type CreatableProfile = Omit<
   UserProfileDTO,

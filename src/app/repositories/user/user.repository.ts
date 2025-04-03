@@ -1,7 +1,7 @@
 import { $ } from "@/app/database";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { Prisma, User } from "@prisma/client";
-import Repository from "../repository";
+import Repository from "../temp/repository";
 import { FlagsDTO } from "@/app/dto/system/flags.dto";
 
 type CreatableUser = Omit<UserDTO, "id" | "created_at" | "updated_at">;

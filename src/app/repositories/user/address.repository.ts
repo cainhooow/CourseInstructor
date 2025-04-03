@@ -1,5 +1,5 @@
 import { Address, Prisma } from "@prisma/client";
-import Repository from "../repository";
+import Repository from "../temp/repository";
 import { $ } from "@/app/database";
 
 export type CreatableAddress = Prisma.AddressCreateInput;

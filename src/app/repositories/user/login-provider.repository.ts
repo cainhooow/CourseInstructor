@@ -1,6 +1,6 @@
 import { $ } from "@/app/database";
 import { LoginProvider, Prisma } from "@prisma/client";
-import Repository from "../repository";
+import Repository from "../temp/repository";
 import { LoginProviderDTO } from "@/app/dto/user/login-provider.dto";
 
 export type CreateableProvider = Omit<

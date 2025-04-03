@@ -1,4 +1,4 @@
-import Strategy from "./strategy";
+import Strategy from "./temp/strategy";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { Request } from "express";
 import UserService from "../services/user/user.service";

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import Middleware from "./middleware";
+import Middleware from "./temp/middleware";
 import { UserWithFlagsDTO } from "../dto/user/user.dto";
 import { FlagsType } from "@prisma/client";
 import ResponseUnauthorized from "../http/errors/unauthorized.error";

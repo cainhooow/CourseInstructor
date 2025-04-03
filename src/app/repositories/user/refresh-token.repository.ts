@@ -1,5 +1,5 @@
 import { Prisma, RefreshToken } from "@prisma/client";
-import Repository from "../repository";
+import Repository from "../temp/repository";
 import { RefreshTokenDTO } from "@/app/dto/user/refresh-token.dto";
 import { $ } from "@/app/database";
 

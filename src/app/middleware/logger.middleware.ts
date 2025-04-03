@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import Middleware from "./middleware";
+import Middleware from "./temp/middleware";
 import Logger from "../utils/logger";
 
 export default class LoggerMiddleware extends Middleware {
