@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import Middleware from "./temp/middleware";
+import Middleware from "./middleware";
 import { BaseError } from "../http/errors/base.error";
 import ValidationError from "../http/errors/validation.error";
 import Logger from "../utils/logger";

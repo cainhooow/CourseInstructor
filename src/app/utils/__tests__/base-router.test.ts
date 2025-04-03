@@ -1,6 +1,6 @@
 import { describe, test, expect, mock, spyOn, beforeEach } from "bun:test";
 import BaseRouter from "../base-router";
-import Middleware from "../../middleware/temp/middleware";
+import Middleware from "../../middleware/middleware";
 
 // Mock para express.Router
 const mockRouter = {

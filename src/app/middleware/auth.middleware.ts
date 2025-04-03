@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import Middleware from "./temp/middleware";
+import Middleware from "./middleware";
 import passport from "passport";
 import { UserDTO } from "../dto/user/user.dto";
 
