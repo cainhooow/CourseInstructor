@@ -1,6 +1,6 @@
 import { $ } from "@/app/database";
 import { BillingInfo, Prisma } from "@prisma/client";
-import Repository from "../temp/repository";
+import Repository from "../repository";
 import { UserBillingDTO } from "@/app/dto/user/user-billiing.dto";
 
 export type CreatableProfileBilling = Omit<

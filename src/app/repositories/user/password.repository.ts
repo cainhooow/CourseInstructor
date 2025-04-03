@@ -1,6 +1,6 @@
 import { $ } from "@/app/database";
 import { UserPasswordDTO } from "@/app/dto/user/user-password.dto";
-import Repository from "../temp/repository";
+import Repository from "../repository";
 import { Password, Prisma } from "@prisma/client";
 
 export type CreatablePassword = Omit<

@@ -1,5 +1,5 @@
 import { FlagsDTO } from "@/app/dto/system/flags.dto";
-import Repository from "../temp/repository";
+import Repository from "../repository";
 import { Flag, Prisma } from "@prisma/client";
 import { $ } from "@/app/database";
 
