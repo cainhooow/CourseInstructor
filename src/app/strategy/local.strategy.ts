@@ -1,5 +1,5 @@
 import { Strategy as PassportLocal } from "passport-local";
-import Strategy from "./temp/strategy";
+import Strategy from "./strategy";
 import UserService from "../services/user/user.service";
 import PasswordService from "../services/user/password.service";
 
