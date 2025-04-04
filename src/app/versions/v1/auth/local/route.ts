@@ -1,15 +1,15 @@
+import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import { Validatate } from "@/app/http/requests/request";
 import { ProviderType } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
-import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import Logger from "@/app/utils/logger";
 import passport from "passport";
 import UserRequest from "@/app/http/requests/user/user.request";
 import UserService from "@/app/services/user/user.service";
 import UserResponse from "@/app/http/responses/user/user.response";
 import AuthService from "@/app/services/system/auth.service";
 import LoginProviderService from "@/app/services/user/login-provider.service";
-import Logger from "@/app/utils/logger";
 import PasswordService from "@/app/services/user/password.service";
-import { Validatate } from "@/app/http/requests/request";
 
 @Route("/local")
 export default class AuthLocalRouter extends BaseRouter {

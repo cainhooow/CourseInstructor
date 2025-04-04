@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
-import { UserDTO } from "@/app/dto/user/user.dto";
 import BaseRouter, { Get, Post, Put, Route } from "@/app/utils/base-router";
 import ProfileService from "@/app/services/user/profile.service";
-import { UserProfileDTO } from "@/app/dto/user/user-profile.dto";
 import UserProfileResponse from "@/app/http/responses/user/user-profile.response";
 import UserProfileRequest from "@/app/http/requests/user/user-profile.request";
+import { Request, Response } from "express";
 import { Validatate } from "@/app/http/requests/request";
+import { UserDTO } from "@/app/dto/user/user.dto";
+import { UserProfileDTO } from "@/app/dto/user/user-profile.dto";
 
 @Route("/profile")
 export default class ProfileRouter extends BaseRouter {

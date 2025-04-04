@@ -29,7 +29,7 @@ type ValidateOptions<T> =
       renameFields?: Record<keyof T | string, string>;
     });
 
-type AcceptedInputValues = string | number | string[];
+type AcceptedInputValues = string | number | string[] | boolean;
 
 export function Validatate<T extends Record<string, AcceptedInputValues> = {}>(
   ValidatorClass: new (req: ExpressRequest) => Request<T>,

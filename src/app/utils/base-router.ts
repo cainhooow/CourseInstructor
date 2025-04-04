@@ -27,6 +27,7 @@ export function Route(prefix: string) {
     };
   };
 }
+
 export function Middlewares(middlewares: Middleware[]) {
   return function <T extends new (...args: any[]) => any>(constructor: T) {
     return class extends constructor {

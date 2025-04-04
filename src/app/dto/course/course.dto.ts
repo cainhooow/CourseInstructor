@@ -1,3 +1,5 @@
+import { UserDTO } from "../user/user.dto";
+
 export type CourseDTO = {
   id: string;
   name: string;
@@ -11,4 +13,8 @@ export type CourseDTO = {
   createdById: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type CourseWithCreatedByDTO = CourseDTO & {
+  created_by: UserDTO;
 };

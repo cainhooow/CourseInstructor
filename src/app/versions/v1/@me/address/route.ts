@@ -1,10 +1,10 @@
-import { Request as ExpressRequest, Response } from "express";
-import AddressService from "@/app/services/user/address.service";
 import BaseRouter, { Post, Route } from "@/app/utils/base-router";
-import UserAddressRequest from "@/app/http/requests/user/user-address.request";
-import UserAddressResponse from "@/app/http/responses/user/user-address.response";
+import { Request as ExpressRequest, Response } from "express";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { Validatate } from "@/app/http/requests/request";
+import AddressService from "@/app/services/user/address.service";
+import UserAddressRequest from "@/app/http/requests/user/user-address.request";
+import UserAddressResponse from "@/app/http/responses/user/user-address.response";
 
 @Route("/address")
 export default class AddressRouter extends BaseRouter {
