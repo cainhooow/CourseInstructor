@@ -1,6 +1,7 @@
 import UserProfileRepository, {
   CreatableProfile,
 } from "@/app/repositories/user/user-profile.repository";
+import { ProfileType } from "@prisma/client";
 
 export default class ProfileService {
   constructor(protected readonly repository = new UserProfileRepository()) {}
@@ -11,6 +12,10 @@ export default class ProfileService {
 
   public async setBio(id: string, bio: string) {
     return await this.repository.setBio(id, bio);
+  }
+
+  public async setType(id: string, type: ProfileType) {
+    return await this.repository.setType(id, type);
   }
 
   public async update(

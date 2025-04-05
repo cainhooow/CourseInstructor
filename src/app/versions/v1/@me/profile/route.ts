@@ -1,11 +1,20 @@
-import BaseRouter, { Get, Post, Put, Route } from "@/app/utils/base-router";
+import BaseRouter, {
+  Get,
+  Patch,
+  Post,
+  Put,
+  Route,
+} from "@/app/utils/base-router";
+import { Response } from "express";
+import { Validate } from "@/app/http/requests/request";
+import { UserDTO } from "@/app/dto/user/user.dto";
+import { UserProfileDTO } from "@/app/dto/user/user-profile.dto";
+import { ProfileType } from "@prisma/client";
 import ProfileService from "@/app/services/user/profile.service";
 import UserProfileResponse from "@/app/http/responses/user/user-profile.response";
 import UserProfileRequest from "@/app/http/requests/user/user-profile.request";
-import { Request, Response } from "express";
-import { Validatate } from "@/app/http/requests/request";
-import { UserDTO } from "@/app/dto/user/user.dto";
-import { UserProfileDTO } from "@/app/dto/user/user-profile.dto";
+import Guard, { TypeGuards } from "@/app/utils/type-guards";
+// import RoleMiddleware from "@/app/middleware/role.middleware";
 
 @Route("/profile")
 export default class ProfileRouter extends BaseRouter {
@@ -14,8 +23,9 @@ export default class ProfileRouter extends BaseRouter {
   }
 
   @Get("/")
-  async index(req: Request, res: Response) {
-    const authUser = req.user as UserDTO;
+  async index(req: TypeGuards.AuthRequest, res: Response) {
+    const authUser = Guard.toUser<UserDTO>(req.user);
+
     const user = (await this.service.findByUserId(
       authUser.id
     )) as UserProfileDTO;
@@ -24,24 +34,54 @@ export default class ProfileRouter extends BaseRouter {
   }
 
   @Post("/")
-  @Validatate(UserProfileRequest, (req) => ({
+  @Validate(UserProfileRequest, (req) => ({
     appendFields: {
       userId: (req.user as UserDTO).id,
     },
+    removeFields: ["type"],
   }))
-  async create(req: Request, res: Response) {
+  async create(req: TypeGuards.AuthRequest, res: Response) {
     const data = await this.service.create(req.body);
     res.json(new UserProfileResponse(data).make());
   }
 
   @Put("/update")
-  @Validatate(UserProfileRequest, {
+  @Validate(UserProfileRequest, {
     removeFields: ["type"],
   })
-  async update(req: Request, res: Response) {
-    const user = req.user as UserDTO & { Profile: UserProfileDTO };
+  async update(req: TypeGuards.AuthRequest, res: Response) {
+    const user = Guard.assignObject<UserDTO, "Profile", UserProfileDTO>(
+      req.user as UserDTO
+    );
+
     const data = await this.service.update(user.Profile.id, user.id, req.body);
-    res.json(new UserProfileResponse(data as UserProfileDTO).make());
+    if (!data) {
+      return res.status(404).json({ message: "Failed to update user" });
+    }
+
+    res.json(
+      new UserProfileResponse(Guard.toProfile<UserProfileDTO>(data)).make()
+    );
+  }
+
+  @Patch("/update")
+  @Validate(UserProfileRequest)
+  async changeToTeacher(req: TypeGuards.AuthRequest, res: Response) {
+    const user = Guard.assignObject<UserDTO | {}, "Profile", UserProfileDTO>(
+      req.user
+    );
+
+    const data = await this.service.setType(
+      user.Profile.id,
+      ProfileType.TEACHER
+    );
+    if (!data) {
+      return res.status(404).json({ message: "Failed to update user" });
+    }
+
+    res.json(
+      new UserProfileResponse(Guard.toProfile<UserProfileDTO>(data)).make()
+    );
   }
 
   public route(): void {}

@@ -1,6 +1,6 @@
 import BaseRouter, { Post, Route } from "@/app/utils/base-router";
 import { UserDTO } from "@/app/dto/user/user.dto";
-import { Validatate } from "@/app/http/requests/request";
+import { Validate } from "@/app/http/requests/request";
 import { Request, Response } from "express";
 import UserBillingRequest from "@/app/http/requests/user/user-billing.request";
 import UserBillingResponse from "@/app/http/responses/user/user-billing.response";
@@ -13,7 +13,7 @@ export default class BillingRouter extends BaseRouter {
   }
 
   @Post("/")
-  @Validatate(UserBillingRequest, (req) => ({
+  @Validate(UserBillingRequest, (req) => ({
     appendFields: {
       userId: (req.user as UserDTO).id,
     },

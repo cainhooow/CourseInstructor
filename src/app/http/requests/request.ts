@@ -31,7 +31,7 @@ type ValidateOptions<T> =
 
 type AcceptedInputValues = string | number | string[] | boolean;
 
-export function Validatate<T extends Record<string, AcceptedInputValues> = {}>(
+export function Validate<T extends Record<string, AcceptedInputValues> = {}>(
   ValidatorClass: new (req: ExpressRequest) => Request<T>,
   options?: ValidateOptions<T>
 ) {

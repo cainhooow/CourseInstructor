@@ -1,7 +1,7 @@
 import BaseRouter, { Post, Route } from "@/app/utils/base-router";
 import { Request as ExpressRequest, Response } from "express";
 import { UserDTO } from "@/app/dto/user/user.dto";
-import { Validatate } from "@/app/http/requests/request";
+import { Validate } from "@/app/http/requests/request";
 import AddressService from "@/app/services/user/address.service";
 import UserAddressRequest from "@/app/http/requests/user/user-address.request";
 import UserAddressResponse from "@/app/http/responses/user/user-address.response";
@@ -13,7 +13,7 @@ export default class AddressRouter extends BaseRouter {
   }
 
   @Post("/")
-  @Validatate(UserAddressRequest, (req: ExpressRequest) => ({
+  @Validate(UserAddressRequest, (req: ExpressRequest) => ({
     appendFields: { userId: (req.user as UserDTO).id },
   }))
   async create(req: ExpressRequest, res: Response) {

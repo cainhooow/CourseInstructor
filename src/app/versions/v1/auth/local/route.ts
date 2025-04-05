@@ -1,5 +1,5 @@
 import BaseRouter, { Post, Route } from "@/app/utils/base-router";
-import { Validatate } from "@/app/http/requests/request";
+import { Validate } from "@/app/http/requests/request";
 import { ProviderType } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import Logger from "@/app/utils/logger";
@@ -53,7 +53,7 @@ export default class AuthLocalRouter extends BaseRouter {
   }
 
   @Post("/register")
-  @Validatate(UserRequest)
+  @Validate(UserRequest)
   async register(req: Request, res: Response) {
     const { email, display_name, password } = req.body;
 

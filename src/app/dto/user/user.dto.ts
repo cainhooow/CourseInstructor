@@ -10,7 +10,7 @@ export type UserDTO = {
   updated_at: Date;
 };
 
-export type UserWithPasswordDto = UserDTO & {
+export type UserWithPasswordDTO = UserDTO & {
   password: UserPasswordDTO;
 };
 

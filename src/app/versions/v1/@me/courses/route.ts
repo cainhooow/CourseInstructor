@@ -4,7 +4,7 @@ import CourseRequest from "@/app/http/requests/course/course.request";
 import CourseService from "@/app/services/course/course.service";
 import CourseResponse from "@/app/http/responses/course/course.response";
 import { Request, Response } from "express";
-import { Validatate } from "@/app/http/requests/request";
+import { Validate } from "@/app/http/requests/request";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { CourseDTO } from "@/app/dto/course/course.dto";
 
@@ -14,10 +14,8 @@ export default class CourseRouter extends BaseRouter {
     super();
   }
 
-  @Post("/", [
-    new RoleMiddleware(["CAN_POST_COURSE"]),
-  ])
-  @Validatate(CourseRequest, (req) => ({
+  @Post("/", [new RoleMiddleware(["CAN_POST_COURSE"])])
+  @Validate(CourseRequest, (req) => ({
     appendFields: {
       createdById: (req.user as UserDTO).id,
     },
