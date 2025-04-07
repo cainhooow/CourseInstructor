@@ -1,5 +1,5 @@
 import { describe, test, expect, mock, spyOn, beforeEach } from "bun:test";
-import BaseRouter from "../base-router";
+import Controller from "../controller";
 import Middleware from "../../middleware/middleware";
 
 // Mock para express.Router
@@ -37,7 +37,7 @@ class SimpleMiddleware extends Middleware {
 }
 
 // Subclasse de BaseRouter para testes
-class TestRouter extends BaseRouter {
+class TestRouter extends Controller {
   routeCalled = false;
 
   public route(): void {
@@ -48,7 +48,7 @@ class TestRouter extends BaseRouter {
 describe("BaseRouter", () => {
   let testMiddleware: TestMiddleware;
   let simpleMiddleware: SimpleMiddleware;
-  let baseRouter: BaseRouter;
+  let baseRouter: Controller;
   let testRouter: TestRouter;
 
   beforeEach(() => {
@@ -57,24 +57,24 @@ describe("BaseRouter", () => {
 
     testMiddleware = new TestMiddleware();
     simpleMiddleware = new SimpleMiddleware();
-    baseRouter = new BaseRouter({});
+    baseRouter = new Controller({});
     testRouter = new TestRouter({});
   });
 
   describe("Construtor", () => {
     test("deve inicializar com valores padrão quando options estão vazias", () => {
-      const router = new BaseRouter({});
-      expect(router).toBeInstanceOf(BaseRouter);
+      const router = new Controller({});
+      expect(router).toBeInstanceOf(Controller);
     });
 
     test("deve inicializar com prefix fornecido", () => {
-      const router = new BaseRouter({ prefix: "/api" });
-      expect(router).toBeInstanceOf(BaseRouter);
+      const router = new Controller({ prefix: "/api" });
+      expect(router).toBeInstanceOf(Controller);
     });
 
     test("deve inicializar com middlewares fornecidos", () => {
-      const router = new BaseRouter({ middlewares: [testMiddleware] });
-      expect(router).toBeInstanceOf(BaseRouter);
+      const router = new Controller({ middlewares: [testMiddleware] });
+      expect(router).toBeInstanceOf(Controller);
     });
   });
 
@@ -173,7 +173,7 @@ describe("BaseRouter", () => {
   });
 
   describe("Comportamento de herança", () => {
-    class CustomRouter extends BaseRouter {
+    class CustomRouter extends Controller {
       public routeImplemented = false;
 
       public route(): void {

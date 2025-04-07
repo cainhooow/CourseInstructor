@@ -8,7 +8,7 @@ interface Options {
   middlewares?: Middleware[];
 }
 
-interface RouterHandler {
+interface ControllerHandler {
   route(): void;
   getRouter(): express.Router;
 }
@@ -86,7 +86,7 @@ export const Head = createRouteDecorator("head");
 export const Delete = createRouteDecorator("delete");
 //#endregion
 
-export default class BaseRouter implements RouterHandler {
+export default class Controller implements ControllerHandler {
   //#region
   protected router: express.Router;
   private prefix: string;

@@ -1,9 +1,9 @@
-import BaseRouter, { Route } from "@/app/utils/base-router";
+import Controller, { Route } from "@/app/utils/controller";
 import AuthRouter from "./auth/route";
 import MeRouter from "./@me/route";
 
 @Route("/v1")
-export default class V1Router extends BaseRouter {
+export default class V1Router extends Controller {
   constructor() {
     super();
   }

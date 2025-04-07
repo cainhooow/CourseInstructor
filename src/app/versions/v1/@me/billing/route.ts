@@ -1,4 +1,4 @@
-import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import Controller, { Post, Route } from "@/app/utils/controller";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { Validate } from "@/app/http/requests/request";
 import { Request, Response } from "express";
@@ -7,7 +7,7 @@ import UserBillingResponse from "@/app/http/responses/user/user-billing.response
 import BillingService from "@/app/services/user/billing.service";
 
 @Route("/billing")
-export default class BillingRouter extends BaseRouter {
+export default class BillingRouter extends Controller {
   constructor(protected readonly service = new BillingService()) {
     super();
   }

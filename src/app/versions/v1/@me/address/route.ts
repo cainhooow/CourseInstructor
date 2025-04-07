@@ -1,4 +1,4 @@
-import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import Controller, { Post, Route } from "@/app/utils/controller";
 import { Request as ExpressRequest, Response } from "express";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { Validate } from "@/app/http/requests/request";
@@ -7,7 +7,7 @@ import UserAddressRequest from "@/app/http/requests/user/user-address.request";
 import UserAddressResponse from "@/app/http/responses/user/user-address.response";
 
 @Route("/address")
-export default class AddressRouter extends BaseRouter {
+export default class AddressRouter extends Controller {
   constructor(protected readonly service = new AddressService()) {
     super();
   }

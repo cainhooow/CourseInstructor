@@ -1,4 +1,4 @@
-import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import Controller, { Post, Route } from "@/app/utils/controller";
 import RoleMiddleware from "@/app/middleware/role.middleware";
 import CourseRequest from "@/app/http/requests/course/course.request";
 import CourseService from "@/app/services/course/course.service";
@@ -9,7 +9,7 @@ import { UserDTO } from "@/app/dto/user/user.dto";
 import { CourseDTO } from "@/app/dto/course/course.dto";
 
 @Route("/courses")
-export default class CourseRouter extends BaseRouter {
+export default class CourseRouter extends Controller {
   constructor(protected readonly service = new CourseService()) {
     super();
   }

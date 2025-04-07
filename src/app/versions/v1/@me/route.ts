@@ -1,4 +1,4 @@
-import BaseRouter, { Get, Middlewares, Route } from "@/app/utils/base-router";
+import Controller, { Get, Middlewares, Route } from "@/app/utils/controller";
 import { Request, Response } from "express";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import UserResponse from "@/app/http/responses/user/user.response";
@@ -10,7 +10,7 @@ import CourseRouter from "./courses/route";
 
 @Route("/@me")
 @Middlewares([new AuthMiddleware("jwt")])
-export default class MeRouter extends BaseRouter {
+export default class MeRouter extends Controller {
   constructor() {
     super();
   }

@@ -1,4 +1,4 @@
-import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import Controller, { Post, Route } from "@/app/utils/controller";
 import { Validate } from "@/app/http/requests/request";
 import { ProviderType } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
@@ -12,7 +12,7 @@ import LoginProviderService from "@/app/services/user/login-provider.service";
 import PasswordService from "@/app/services/user/password.service";
 
 @Route("/local")
-export default class AuthLocalRouter extends BaseRouter {
+export default class AuthLocalRouter extends Controller {
   constructor(
     protected readonly service = new UserService(),
     protected readonly passwordService = new PasswordService(),

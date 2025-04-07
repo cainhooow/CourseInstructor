@@ -1,10 +1,10 @@
-import BaseRouter, {
+import Controller, {
   Get,
   Patch,
   Post,
   Put,
   Route,
-} from "@/app/utils/base-router";
+} from "@/app/utils/controller";
 import { Response } from "express";
 import { Validate } from "@/app/http/requests/request";
 import { UserDTO } from "@/app/dto/user/user.dto";
@@ -17,7 +17,7 @@ import Guard, { TypeGuards } from "@/app/utils/type-guards";
 // import RoleMiddleware from "@/app/middleware/role.middleware";
 
 @Route("/profile")
-export default class ProfileRouter extends BaseRouter {
+export default class ProfileRouter extends Controller {
   constructor(protected readonly service = new ProfileService()) {
     super();
   }
@@ -67,7 +67,7 @@ export default class ProfileRouter extends BaseRouter {
   @Patch("/update")
   @Validate(UserProfileRequest)
   async changeToTeacher(req: TypeGuards.AuthRequest, res: Response) {
-    const user = Guard.assignObject<UserDTO | {}, "Profile", UserProfileDTO>(
+    const user = Guard.assignObject<UserDTO, "Profile", UserProfileDTO>(
       req.user
     );
 

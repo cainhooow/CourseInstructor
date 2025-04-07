@@ -1,12 +1,12 @@
 import type { Request, Response } from "express";
-import BaseRouter, { Post, Route } from "@/app/utils/base-router";
+import Controller, { Post, Route } from "@/app/utils/controller";
 import AuthLocalRouter from "./local/route";
 import AuthService from "@/app/services/system/auth.service";
 import RefreshTokenRequest from "@/app/http/requests/auth/refresh-token.request";
 import { Validate } from "@/app/http/requests/request";
 
 @Route("/auth")
-export default class AuthRouter extends BaseRouter {
+export default class AuthRouter extends Controller {
   constructor(protected readonly authService = new AuthService()) {
     super();
   }
