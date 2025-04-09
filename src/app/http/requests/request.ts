@@ -8,6 +8,7 @@ import {
 } from "express";
 import Logger from "@/app/utils/logger";
 import ValidationError from "../errors/validation.error";
+import { TypeGuards } from "@/app/utils/type-guards";
 
 export interface IRequest<T> {
   validateAsync(): Promise<boolean>;
@@ -32,7 +33,9 @@ type ValidateOptions<T> =
 type AcceptedInputValues = string | number | string[] | boolean;
 
 export function Validate<T extends Record<string, AcceptedInputValues> = {}>(
-  ValidatorClass: new (req: ExpressRequest) => Request<T>,
+  ValidatorClass: new (
+    req: ExpressRequest | TypeGuards.AuthRequest
+  ) => Request<T>,
   options?: ValidateOptions<T>
 ) {
   return function (
@@ -43,7 +46,7 @@ export function Validate<T extends Record<string, AcceptedInputValues> = {}>(
     const originalMethod = descriptor.value;
 
     descriptor.value = async function (
-      req: ExpressRequest,
+      req: ExpressRequest | TypeGuards.AuthRequest,
       res: ExpressResponse,
       next: NextFunction
     ) {
@@ -96,7 +99,7 @@ export default class Request<T extends Record<string, AcceptedInputValues> = {}>
   private renamedFields: Record<string, string> = {};
 
   constructor(
-    protected readonly req: ExpressRequest,
+    protected readonly req: ExpressRequest | TypeGuards.AuthRequest,
     private requiredFields: string[],
     protected readonly helper = new ValidationHelper()
   ) {

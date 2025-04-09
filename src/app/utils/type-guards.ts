@@ -11,7 +11,26 @@ export default class Guard {
     return data as T & { [P in K]: V };
   }
 
-  static toUser<T>(data: T): T {
+  static selectOnly<T, K extends keyof T>(
+    data: T
+  ): Pick<T, K> & Partial<Record<Exclude<keyof T, K>, never>> {
+    return data as any;
+  }
+
+  static assumeAs<U>(data: unknown): U {
+    return data as U;
+  }
+
+  static isNull<T>(data: T | null) {
+    return !data;
+  }
+
+  static isUndefined<T>(data: T | undefined) {
+    return typeof data === "undefined";
+  }
+
+  static toUser<T>(data: T | undefined): T {
+    if (!data) throw new Error("user is undefined");
     return data;
   }
 

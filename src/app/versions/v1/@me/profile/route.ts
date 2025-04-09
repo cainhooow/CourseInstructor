@@ -26,11 +26,14 @@ export default class ProfileRouter extends Controller {
   async index(req: TypeGuards.AuthRequest, res: Response) {
     const authUser = Guard.toUser<UserDTO>(req.user);
 
-    const user = (await this.service.findByUserId(
-      authUser.id
-    )) as UserProfileDTO;
+    const user = await this.service.findByUserId(authUser.id);
+    if (Guard.isNull(user)) {
+      throw new Error("Cannot find user");
+    }
 
-    res.json(new UserProfileResponse(user).make());
+    res.json(
+      new UserProfileResponse(Guard.assumeAs<UserProfileDTO>(user)).make()
+    );
   }
 
   @Post("/")
@@ -42,6 +45,10 @@ export default class ProfileRouter extends Controller {
   }))
   async create(req: TypeGuards.AuthRequest, res: Response) {
     const data = await this.service.create(req.body);
+    if (Guard.isNull(data)) {
+      throw new Error("Cannot find user");
+    }
+
     res.json(new UserProfileResponse(data).make());
   }
 
@@ -55,12 +62,12 @@ export default class ProfileRouter extends Controller {
     );
 
     const data = await this.service.update(user.Profile.id, user.id, req.body);
-    if (!data) {
-      return res.status(404).json({ message: "Failed to update user" });
+    if (Guard.isNull(data)) {
+      throw new Error("cannot find and update user profile");
     }
 
     res.json(
-      new UserProfileResponse(Guard.toProfile<UserProfileDTO>(data)).make()
+      new UserProfileResponse(Guard.assumeAs<UserProfileDTO>(data)).make()
     );
   }
 
@@ -75,12 +82,12 @@ export default class ProfileRouter extends Controller {
       user.Profile.id,
       ProfileType.TEACHER
     );
-    if (!data) {
-      return res.status(404).json({ message: "Failed to update user" });
+    if (Guard.isNull(data)) {
+      throw new Error("cannot find and update user profile");
     }
 
     res.json(
-      new UserProfileResponse(Guard.toProfile<UserProfileDTO>(data)).make()
+      new UserProfileResponse(Guard.assumeAs<UserProfileDTO>(data)).make()
     );
   }
 

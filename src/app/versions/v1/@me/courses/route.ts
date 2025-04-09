@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 import { Validate } from "@/app/http/requests/request";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { CourseDTO } from "@/app/dto/course/course.dto";
+import Guard from "@/app/utils/type-guards";
 
 @Route("/courses")
 export default class CourseRouter extends Controller {
@@ -23,7 +24,11 @@ export default class CourseRouter extends Controller {
   }))
   async create(req: Request, res: Response) {
     const data = await this.service.create(req.body);
-    return res.json(new CourseResponse(data as unknown as CourseDTO).make());
+    if (Guard.isNull(data)) {
+      throw new Error("Cannot create course");
+    }
+
+    return res.json(new CourseResponse(Guard.assumeAs<CourseDTO>(data)).make());
   }
 
   public route(): void {}
