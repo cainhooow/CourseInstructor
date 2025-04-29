@@ -8,7 +8,7 @@ export default class UserService {
   constructor(
     protected readonly repository = new UserRepository(),
     protected readonly service = new FlagService()
-  ) {}
+  ) { }
 
   public async findById(id: string) {
     return await this.repository.includes(["Profile", "Flags"]).findById(id);
@@ -32,6 +32,9 @@ export default class UserService {
       {
         name: "CAN_LOGIN",
       },
+      {
+        name: "CAN_POST_COURSE" // temporary test
+      }
     ]);
 
     if (!flags) return;

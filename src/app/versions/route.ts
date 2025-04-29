@@ -1,6 +1,6 @@
+import { Controller, Middlewares, Route } from "@fastexpress/http";
 import ErrorMiddleware from "../middleware/error.middleware";
 import LoggerMiddleware from "../middleware/logger.middleware";
-import Controller, { Middlewares, Route } from "../utils/controller";
 import V1Router from "./v1/route";
 
 @Route("/api")

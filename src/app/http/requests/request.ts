@@ -16,19 +16,23 @@ export interface IRequest<T> {
   getData<ExtraFields extends Record<string, any> = {}>(): T & ExtraFields;
 }
 
+interface ReturnFunction<T> {
+  (): (keyof T | string)[];
+}
+
 type ValidateOptions<T> =
   | {
-      appendFields?: Partial<T> & Record<string, any>;
-      removeFields?: (keyof T | string)[];
-      optionalFields?: (keyof T | string)[];
-      renameFields?: Record<keyof T | string, string>;
-    }
+    appendFields?: Partial<T> & Record<string, any>;
+    removeFields?: (keyof T | string)[] | ReturnFunction<T>;
+    optionalFields?: (keyof T | string)[];
+    renameFields?: Record<keyof T | string, string>;
+  }
   | ((req: ExpressRequest) => {
-      appendFields?: Partial<T> & Record<string, any>;
-      removeFields?: (keyof T | string)[];
-      optionalFields?: (keyof T | string)[];
-      renameFields?: Record<keyof T | string, string>;
-    });
+    appendFields?: Partial<T> & Record<string, any>;
+    removeFields?: (keyof T | string)[] | ReturnFunction<T>;
+    optionalFields?: (keyof T | string)[];
+    renameFields?: Record<keyof T | string, string>;
+  });
 
 type AcceptedInputValues = string | number | string[] | boolean;
 
@@ -52,32 +56,38 @@ export function Validate<T extends Record<string, AcceptedInputValues> = {}>(
     ) {
       try {
         const validator = new ValidatorClass(req);
-        await validator.validateAsync();
 
         const opt =
           typeof options === "function" ? options(req as any) : options;
 
         if (opt?.removeFields) {
-          validator.removeFields(opt.removeFields as string[]);
+          validator.removeFields(
+            typeof opt.removeFields === "function"
+              ? opt.removeFields() as string[]
+              : opt.removeFields as string[]);
         }
 
         if (opt?.optionalFields) {
           validator.optionals(opt.optionalFields as string[]);
         }
 
+        
         if (opt?.renameFields) {
           for (const [from, to] of Object.entries(opt.renameFields)) {
             validator.renameField(from, to);
           }
         }
+        
+        await validator.validateAsync()
 
         if (opt?.appendFields) {
           for (const [key, value] of Object.entries(opt.appendFields)) {
             validator.appendField(key, value);
           }
         }
-
+        
         req.body = validator.getData();
+
         return await originalMethod.apply(this, [req, res, next]);
       } catch (err) {
         throw err;
@@ -89,8 +99,7 @@ export function Validate<T extends Record<string, AcceptedInputValues> = {}>(
 }
 
 export default class Request<T extends Record<string, AcceptedInputValues> = {}>
-  implements IRequest<T>
-{
+  implements IRequest<T> {
   protected errors: string[] = [];
   protected data: Record<string, any>;
 
@@ -109,7 +118,7 @@ export default class Request<T extends Record<string, AcceptedInputValues> = {}>
   public async validateAsync(): Promise<boolean> {
     this.errors = [];
 
-    if (typeof this.data === "undefined") {
+    if (typeof this.data === "undefined" || typeof this.req.body === "undefined") {
       this.errors.push(this.req.t("validation.failed"));
       throw new ValidationError(this.errors);
     }
@@ -152,7 +161,6 @@ export default class Request<T extends Record<string, AcceptedInputValues> = {}>
 
   private async applyRulesAsync() {
     const rules = this.rules();
-
     for (const [field, ruleString] of Object.entries(rules)) {
       const value = this.data[field];
       if (!value || typeof value === "undefined") return;
@@ -248,7 +256,7 @@ export default class Request<T extends Record<string, AcceptedInputValues> = {}>
 
     return this;
   }
-
+  
   public removeField<K extends keyof T | {}>(field: K) {
     Logger.log("DEBUG", `Field ${field.toString()} deleted from request.body`);
 
@@ -268,8 +276,10 @@ export default class Request<T extends Record<string, AcceptedInputValues> = {}>
 
   public renameField<K extends keyof T>(from: K, to: string): this {
     Logger.log("DEBUG", `Renaming field ${from.toString()} to ${to}`);
+
     if (this.data.hasOwnProperty(from)) {
       this.data[to] = this.data[from as string];
+
       delete this.data[from as string];
       this.renamedFields[from as string] = to;
     }
@@ -282,7 +292,7 @@ export default class Request<T extends Record<string, AcceptedInputValues> = {}>
     type RenamedFields = {
       [K in keyof typeof this.renamedFields as (typeof this.renamedFields)[K]]: T[K];
     };
-
+    
     return this.data as T & ExtraFields & RenamedFields;
   }
 }

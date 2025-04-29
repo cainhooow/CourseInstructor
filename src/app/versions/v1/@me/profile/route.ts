@@ -91,5 +91,5 @@ export default class ProfileRouter extends Controller {
     );
   }
 
-  public route(): void {}
+  public route(): void { }
 }

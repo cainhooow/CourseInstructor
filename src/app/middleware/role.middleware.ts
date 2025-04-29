@@ -9,17 +9,14 @@ export default class RoleMiddleware extends Middleware {
     super();
   }
 
-  handle(req: Request, _res: Response, next: NextFunction): void {
+  handle(req: Request, _res: Response, _next: NextFunction): void {
     const user = req.user as UserWithFlagsDTO;
+    const roles = user.Flags.map((role) => role.name);
 
-    user.Flags.map((role) => {
-      if (!this.allowedRoles.includes(role.name)) {
-        throw new ResponseUnauthorized(
-          "The user does not have permissions for this operation"
-        );
+    this.allowedRoles.map((role) => {
+      if (!roles.includes(role)) {
+        throw new ResponseUnauthorized("The user does not have permission to perform this operation")
       }
     });
-
-    next();
   }
 }

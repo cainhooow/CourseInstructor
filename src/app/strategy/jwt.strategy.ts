@@ -1,7 +1,7 @@
-import Strategy from "./strategy";
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
 import { Request } from "express";
 import UserService from "../services/user/user.service";
+import { Strategy } from "@fastexpress/http";
 
 export default class JwtAuthStrategy extends Strategy {
   protected name = "jwt";
@@ -25,10 +25,9 @@ export default class JwtAuthStrategy extends Strategy {
         if (!user) {
           return done(null, false);
         }
-
+        
         return done(null, user);
       }
     );
-    this.register();
   }
 }
