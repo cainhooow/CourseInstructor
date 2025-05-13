@@ -10,10 +10,10 @@ import { Validate } from "@/app/http/requests/request";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { UserProfileDTO } from "@/app/dto/user/user-profile.dto";
 import { ProfileType } from "@prisma/client";
+import Guard, { TypeGuards } from "@/app/utils/type-guards";
 import ProfileService from "@/app/services/user/profile.service";
 import UserProfileResponse from "@/app/http/responses/user/user-profile.response";
 import UserProfileRequest from "@/app/http/requests/user/user-profile.request";
-import Guard, { TypeGuards } from "@/app/utils/type-guards";
 // import RoleMiddleware from "@/app/middleware/role.middleware";
 
 @Route("/profile")
@@ -91,5 +91,5 @@ export default class ProfileRouter extends Controller {
     );
   }
 
-  public route(): void { }
+  public route(): void {}
 }
