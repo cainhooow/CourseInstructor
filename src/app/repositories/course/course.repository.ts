@@ -3,12 +3,26 @@ import Repository from "../repository";
 import { $ } from "@/app/database";
 import { CourseDTO } from "@/app/dto/course/course.dto";
 
-export type CreatableCourse = Omit<CourseDTO, 'created_at' | 'updated_at'>;
+export type CreatableCourse = Omit<CourseDTO, "created_at" | "updated_at">;
 
 export default class CourseRepository extends Repository<
   Course,
   Prisma.CourseInclude
 > {
+  public async findById(id: string) {
+    const includes = this.getIncludes();
+    const data = await $.course.findUnique({
+      where: {
+        id,
+      },
+      include: includes,
+    });
+
+    return data as Prisma.CourseGetPayload<{
+      include: typeof includes;
+    }> | null;
+  }
+
   public async create(course: CreatableCourse) {
     const includes = this.getIncludes();
     const data = await $.course.create({

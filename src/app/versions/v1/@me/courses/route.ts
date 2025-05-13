@@ -8,6 +8,7 @@ import { UserDTO } from "@/app/dto/user/user.dto";
 import { CourseDTO } from "@/app/dto/course/course.dto";
 import { Request, Response } from "express";
 import Guard from "@/app/utils/type-guards";
+import CourseChatRoute from "./discussions/route";
 
 @Route("/courses")
 export default class CourseRouter extends Controller {
@@ -32,5 +33,7 @@ export default class CourseRouter extends Controller {
     return res.json(new CourseResponse(Guard.assumeAs<CourseDTO>(data)).make());
   }
 
-  public route(): void { }
+  public route(): void {
+    this.router.use(new CourseChatRoute().getRouter());
+  }
 }

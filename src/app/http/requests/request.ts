@@ -71,6 +71,7 @@ export function Validate<T extends Record<string, AcceptedInputValues> = {}>(
           validator.optionals(opt.optionalFields as string[]);
         }
 
+        await validator.validateAsync()
         
         if (opt?.renameFields) {
           for (const [from, to] of Object.entries(opt.renameFields)) {
@@ -78,7 +79,6 @@ export function Validate<T extends Record<string, AcceptedInputValues> = {}>(
           }
         }
         
-        await validator.validateAsync()
 
         if (opt?.appendFields) {
           for (const [key, value] of Object.entries(opt.appendFields)) {
