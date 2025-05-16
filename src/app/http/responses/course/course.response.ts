@@ -15,7 +15,8 @@ export default class CourseResponse extends Response {
             demo_video_url: data.demo_video_url,
             tags: data.tags,
             stock: data.stock,
-            archived: data.archived
+            archived: data.archived,
+            ...this.include,
         }
     }
 }

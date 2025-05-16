@@ -17,6 +17,7 @@ export default class UserAddressResponse extends Response {
       state: data.state,
       street: cryptor.decrypt(data.street),
       address: cryptor.decrypt(data.address),
+      ...this.include,
     };
   }
 }

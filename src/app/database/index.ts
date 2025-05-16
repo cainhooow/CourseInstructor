@@ -9,8 +9,9 @@ const redis = new Redis(1000, "localhost");
 const cacheMiddleware: prisma.Prisma.Middleware = createPrismaRedisCache({
   models: [
     { model: "User", cacheTime: 180 },
-    { model: "Flags", cacheTime: 180 },
+    { model: "Flag", cacheTime: 180 },
     { model: "Course", cacheTime: 200 },
+    { model: "Category", cacheTime: 200 },
     { model: "RefreshToken", cacheTime: 90 },
   ],
   storage: {
@@ -22,7 +23,7 @@ const cacheMiddleware: prisma.Prisma.Middleware = createPrismaRedisCache({
       },
     },
   },
-  cacheTime: 300,
+  cacheTime: 1000,
   onHit: (key) => {
     Logger.log("DEBUG", `onHit: ${key}`);
   },

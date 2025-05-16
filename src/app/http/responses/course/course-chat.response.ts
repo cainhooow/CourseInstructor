@@ -12,6 +12,7 @@ export default class CourseChatResponse extends Response {
       name: data.name,
       description: data.description,
       courseId: data.courseId,
+      ...this.include,
     };
   }
 }

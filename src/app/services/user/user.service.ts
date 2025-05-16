@@ -1,6 +1,6 @@
 import { UserDTO } from "@/app/dto/user/user.dto";
 import UserRepository from "@/app/repositories/user/user.repository";
-import FlagService from "../flag.service";
+import FlagService from "../system/flag.service";
 
 type CreatableUser = Omit<UserDTO, "id" | "created_at" | "updated_at">;
 
@@ -8,7 +8,7 @@ export default class UserService {
   constructor(
     protected readonly repository = new UserRepository(),
     protected readonly service = new FlagService()
-  ) { }
+  ) {}
 
   public async findById(id: string) {
     return await this.repository.includes(["Profile", "Flags"]).findById(id);
@@ -33,8 +33,11 @@ export default class UserService {
         name: "CAN_LOGIN",
       },
       {
-        name: "CAN_POST_COURSE" // temporary test
-      }
+        name: "CAN_POST_COURSE", // temporary test
+      },
+      {
+        name: "CAN_LIST_SERVER_SETTINGS", // temporary test
+      },
     ]);
 
     if (!flags) return;
