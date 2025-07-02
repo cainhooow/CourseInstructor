@@ -15,10 +15,8 @@ export default class RoleMiddleware extends Middleware {
 
     this.allowedRoles.map((role) => {
       if (!roles.includes(role)) {
-        throw new ResponseUnauthorized("errors.unauthorized_operation")
+        _next(new ResponseUnauthorized("errors.unauthorized_operation"));
       }
     });
-
-    _next()
   }
 }

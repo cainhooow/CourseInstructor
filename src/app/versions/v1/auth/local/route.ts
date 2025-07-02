@@ -1,4 +1,3 @@
-import Controller, { Post, Route } from "@/app/utils/controller";
 import { Validate } from "@/app/http/requests/request";
 import { ProviderType } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
@@ -10,6 +9,7 @@ import UserResponse from "@/app/http/responses/user/user.response";
 import AuthService from "@/app/services/system/auth.service";
 import LoginProviderService from "@/app/services/user/login-provider.service";
 import PasswordService from "@/app/services/user/password.service";
+import { Controller, Post, Route } from "@fastexpress/http";
 
 @Route("/local")
 export default class AuthLocalRouter extends Controller {

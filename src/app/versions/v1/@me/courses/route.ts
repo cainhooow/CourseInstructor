@@ -1,4 +1,3 @@
-import { Controller, Post, Route } from "@fastexpress/http";
 import { Validate } from "@/app/http/requests/request";
 import { UserDTO } from "@/app/dto/user/user.dto";
 import { CourseDTO } from "@/app/dto/course/course.dto";
@@ -9,6 +8,7 @@ import CourseService from "@/app/services/course/course.service";
 import CourseResponse from "@/app/http/responses/course/course.response";
 import Guard from "@/app/utils/type-guards";
 import CourseChatRoute from "./discussions/route";
+import Controller, { Post, Route } from "@/app/utils/controller";
 
 @Route("/courses")
 export default class CourseRouter extends Controller {
@@ -22,7 +22,7 @@ export default class CourseRouter extends Controller {
     },
     optionalFields: ["banner_url", "demo_video_url", "archived"],
   }))
-  @Post("/", [new RoleMiddleware(["CAN_POST_COURSE", "CAN_EDIT_COURSE"])])
+  @Post("/", [new RoleMiddleware(["CAN_POST_COURSE"])])
   async create(req: Request, res: Response) {
     const data = await this.service.create(req.body);
 

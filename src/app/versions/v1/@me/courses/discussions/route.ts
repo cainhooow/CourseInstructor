@@ -1,6 +1,4 @@
 import { Response } from "express";
-import { Controller, Post } from "@fastexpress/http";
-import { Route } from "@fastexpress/http";
 import { Validate } from "@/app/http/requests/request";
 import { CourseChatDTO } from "@/app/dto/course/course-chat.dto";
 import { UserDTO } from "@/app/dto/user/user.dto";
@@ -9,6 +7,7 @@ import CourseChatRequest from "@/app/http/requests/course/course-chat.request";
 import CourseChatService from "@/app/services/course/course-chat.service";
 import CourseChatResponse from "@/app/http/responses/course/course-chat.response";
 import RoleMiddleware from "@/app/middleware/role.middleware";
+import Controller, { Post, Route } from "@/app/utils/controller";
 
 @Route("/discussions")
 export default class CourseChatRoute extends Controller {
