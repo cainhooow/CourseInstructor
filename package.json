@@ -14,7 +14,7 @@
   "description": "",
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "11.6.0",
-    "@prisma/client": "6.11.0",
+    "@prisma/client": "6.11.1",
     "@types/bcrypt": "5.0.2",
     "@types/cors": "2.8.19",
     "@types/express": "5.0.3",
@@ -29,7 +29,7 @@
     "@types/passport-microsoft": "^2.1.0",
     "@types/passport-strategy": "0.2.38",
     "nodemon": "3.1.10",
-    "prisma": "6.11.0",
+    "prisma": "6.11.1",
     "prisma-erd-generator": "2.0.4",
     "ts-node": "10.9.2",
     "typescript": "5.8.3"
@@ -40,7 +40,7 @@
     "@fastexpress/validators": "link:@fastexpress/validators",
     "axios": "1.10.0",
     "bcrypt": "6.0.0",
-    "bun-types": "1.2.17",
+    "bun-types": "1.2.18",
     "console-log-colors": "0.5.0",
     "cors": "2.8.5",
     "dotenv": "17.0.1",
