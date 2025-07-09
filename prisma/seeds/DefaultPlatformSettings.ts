@@ -4,6 +4,10 @@ import { DefaultOmission } from "../seed";
 export const DefaultPlatformSettings: Omit<PlatformSetting, DefaultOmission>[] =
   [
     {
+      name: "ALLOW_CREATE_TEACHER_PROFILE",
+      value: "true"
+    },
+    {
       name: "DEFAULT_COMISSION",
       value: "10.0",
     },
