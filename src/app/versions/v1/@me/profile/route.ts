@@ -14,6 +14,7 @@ import Guard, { TypeGuards } from "@/app/utils/type-guards";
 import ProfileService from "@/app/services/user/profile.service";
 import UserProfileResponse from "@/app/http/responses/user/user-profile.response";
 import UserProfileRequest from "@/app/http/requests/user/user-profile.request";
+import SettingsService from "@/app/services/system/settings.service";
 // import RoleMiddleware from "@/app/middleware/role.middleware";
 
 @Route("/profile")
@@ -41,7 +42,18 @@ export default class ProfileRouter extends Controller {
     appendFields: {
       userId: (req.user as UserDTO).id,
     },
-    removeFields: ["type"],
+    removeFields: (service = new SettingsService()) => {
+      service.findByKey("ALLOW_CREATE_TEACHER_PROFILE")
+      .then(data => {
+        if (data?.value === "allow") {
+          return ["type"]
+        }
+      }).catch((err) => {
+        throw new Error(err);
+      });
+
+      return []
+    },
   }))
   async create(req: TypeGuards.AuthRequest, res: Response) {
     const data = await this.service.create(req.body);

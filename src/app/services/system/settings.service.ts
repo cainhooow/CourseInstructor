@@ -6,4 +6,12 @@ export default class SettingsService {
   async index() {
     return await this.repository.index();
   }
+
+  async findByKey(key: string) {
+    return await this.repository.findByKey(key);
+  }
+
+  async findById(id: string) {
+    return await this.repository.findById(id);
+  }
 }

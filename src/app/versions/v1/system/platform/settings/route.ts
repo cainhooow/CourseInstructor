@@ -28,6 +28,16 @@ export default class PlatformSettingsRouter extends Controller {
     );
   }
 
+  @Get("/:key")
+  async findByKey(req: Request, res: Response) {
+    const { key } = req.params;
+    const data = await this.service.findByKey(key);
+
+    return res.json(
+      new SettingsResponse(Guard.assumeAs<SettingsDTO>(data)).make()
+    );
+  }
+
   public route(): void {
     this.router.use(new PlatformPaymentRouter().getRouter());
   }
